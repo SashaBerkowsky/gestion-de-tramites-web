@@ -1,5 +1,11 @@
+import PendingTable from "../components/PendingTable";
+
 const DashboardPage = () => {
-  return <div>Cambio para ejemplo</div>;
+  return (
+    <div>
+      <PendingTable />
+    </div>
+  );
 };
 
 export default DashboardPage;
