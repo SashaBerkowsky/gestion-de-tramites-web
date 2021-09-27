@@ -7,6 +7,10 @@ import SignInPage from "./pages/SignIn";
 import PasswordPage from "./pages/Password";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import InProgressPage from "./pages/InProgress";
+import DetailPage from "./pages/Detail";
+import PendingPage from "./pages/Pending";
+import HistoricalPage from "./pages/Historical";
 
 const theme = createTheme({
   palette: {
@@ -44,6 +48,21 @@ export default function App() {
               </Route>
               <Route path="/profile">
                 <ProfilePage />
+              </Route>
+              <Route path="/in-progress">
+                <InProgressPage />
+              </Route>
+              <Route path="/in-progress/:code">
+                <DetailPage />
+              </Route>
+              <Route path="/detail/:code">
+                <DetailPage />
+              </Route>
+              <Route path="/pending">
+                <PendingPage />
+              </Route>
+              <Route path="/historical">
+                <HistoricalPage />
               </Route>
               <Route path="/">
                 <DashboardPage />
