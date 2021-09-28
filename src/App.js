@@ -17,6 +17,7 @@ const theme = createTheme({
 		text: {
 			primary: "#404040",
 			secondary: "#666666",
+			greenApp: "#009688",
 		},
 		primary: {
 			// Purple and green play nicely together.

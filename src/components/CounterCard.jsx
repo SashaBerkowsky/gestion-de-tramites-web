@@ -7,7 +7,7 @@ const CounterCard = ({ title, counter }) => {
 				<CardContent>
 					<Typography
 						variant='button'
-						color='text.secondary'
+						color='text.greenApp'
 						sx={{ fontWeight: "bold" }}
 					>
 						{title}

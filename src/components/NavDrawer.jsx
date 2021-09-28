@@ -198,33 +198,6 @@ export default function PersistentDrawerLeft({ children }) {
 						</NavLink>
 					</MenuList>
 				</Box>
-				<Divider />
-				Para Nosotros: <br />
-				TRÁMITES
-				<List>
-					<ListItem button>
-						<NavLink to='/'>Dashboard</NavLink>
-					</ListItem>
-				</List>
-				<Divider />
-				GENERAL
-				<List>
-					<ListItem>
-						<ListItemText>
-							<Link to='/profile'>Perfil</Link>
-						</ListItemText>
-					</ListItem>
-					<ListItem>
-						<ListItemText>
-							<Link to='/sign-in'>Singin</Link>
-						</ListItemText>
-					</ListItem>
-					<ListItem>
-						<ListItemText>
-							<Link to='/password'>Password</Link>
-						</ListItemText>
-					</ListItem>
-				</List>
 			</Drawer>
 			<Main open={open}>
 				<DrawerHeader />

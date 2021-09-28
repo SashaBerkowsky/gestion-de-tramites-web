@@ -8,7 +8,6 @@ const DashboardPage = () => {
 				<CounterCard title='Pendientes de analisis' counter='10' />
 				<CounterCard title='En proceso de analisis' counter='5' />
 			</Grid>
-			Dashboard
 		</div>
 	);
 };
