@@ -13,69 +13,69 @@ import PendingPage from "./pages/Pending";
 import HistoricalPage from "./pages/Historical";
 
 const theme = createTheme({
-	palette: {
-		text: {
-			primary: "#404040",
-			secondary: "#666666",
-			greenApp: "#009688",
-		},
-		primary: {
-			// Purple and green play nicely together.
-			main: "#009688",
-		},
-		secondary: {
-			// This is green.A700 as hex.
-			main: "#3D5AFE",
-		},
-		info: {
-			main: "#D5D5D5",
-		},
-		error: {
-			main: "#D60909",
-		},
-	},
+  palette: {
+    text: {
+      primary: "#404040",
+      secondary: "#666666",
+      greenApp: "#009688",
+    },
+    primary: {
+      // Purple and green play nicely together.
+      main: "#009688",
+    },
+    secondary: {
+      // This is green.A700 as hex.
+      main: "#3D5AFE",
+    },
+    info: {
+      main: "#D5D5D5",
+    },
+    error: {
+      main: "#D60909",
+    },
+  },
 });
 
 export default function App() {
-	return (
-		<Router>
-			<ThemeProvider theme={theme}>
-				<NavDrawer>
-					<div>
-						{/* A <Switch> looks through its children <Route>s and
+  return (
+    <Router>
+      <ThemeProvider theme={theme}>
+        <NavDrawer>
+          <div>
+            {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-						<Switch>
-							<Route path='/sign-in'>
-								<SignInPage />
-							</Route>
-							<Route path='/password'>
-								<PasswordPage />
-							</Route>
-							<Route path='/profile'>
-								<ProfilePage />
-							</Route>
-							<Route path='/in-progress'>
-								<InProgressPage />
-							</Route>
-							<Route path='/in-progress/:code'>
-								<DetailPage />
-							</Route>
-							<Route path='/detail/:code'>
-								<DetailPage />
-							</Route>
-							<Route path='/pending'>
-								<PendingPage />
-							</Route>
-							<Route path='/historical'>
-								<HistoricalPage />
-							</Route>
-							<Route path='/'>
-								<DashboardPage />
-							</Route>
-						</Switch>
-					</div>
-				</NavDrawer>
-			</ThemeProvider>
-		</Router>
-	);
+            <Switch>
+              <Route path="/sign-in">
+                <SignInPage />
+              </Route>
+              <Route path="/password">
+                <PasswordPage />
+              </Route>
+              <Route path="/profile">
+                <ProfilePage />
+              </Route>
+              <Route exact path="/in-progress">
+                <InProgressPage />
+              </Route>
+              <Route path="/in-progress/:code">
+                <DetailPage />
+              </Route>
+              <Route path="/detail/:code">
+                <DetailPage />
+              </Route>
+              <Route path="/pending">
+                <PendingPage />
+              </Route>
+              <Route path="/historical">
+                <HistoricalPage />
+              </Route>
+              <Route path="/">
+                <DashboardPage />
+              </Route>
+            </Switch>
+          </div>
+        </NavDrawer>
+      </ThemeProvider>
+    </Router>
+  );
 }
