@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import {
-  AppBar as MuiAppBar,
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CssBaseline,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  MenuList,
-  MenuItem,
-  Toolbar,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Divider, Typography, Button } from "@mui/material";
+import AcceptanceDialog from "../components/AcceptanceDialog";
 
 const DetailPage = () => {
   const [isInProgress, setIsInProgress] = useState(false);
   let location = useLocation();
   const { code } = useParams();
+
+  const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenAcceptanceModal(true);
+  };
+  const handleClose = () => {
+    setOpenAcceptanceModal(false);
+  };
   // GET detalle con el codigo de tramite
   console.log(code);
 
@@ -77,6 +69,7 @@ const DetailPage = () => {
               variant="contained"
               color="primary"
               sx={{ marginRight: "5px" }}
+              onClick={handleClickOpen}
             >
               Aprobar
             </Button>
@@ -96,6 +89,7 @@ const DetailPage = () => {
         </Box>
       </Box>
       <Divider sx={{ marginTop: "10px" }} />
+      <AcceptanceDialog open={acceptanceModalOpen} onClose={handleClose} />
     </Box>
   );
 };
