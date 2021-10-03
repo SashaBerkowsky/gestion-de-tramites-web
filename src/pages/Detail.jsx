@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Box, Divider, Typography, Button } from "@mui/material";
 import AcceptanceDialog from "../components/AcceptanceDialog";
+import DetailData from "../components/DetailData";
 
 const DetailPage = () => {
   const [isInProgress, setIsInProgress] = useState(false);
@@ -89,6 +90,7 @@ const DetailPage = () => {
         </Box>
       </Box>
       <Divider sx={{ marginTop: "10px" }} />
+      <DetailData />
       <AcceptanceDialog open={acceptanceModalOpen} onClose={handleClose} />
     </Box>
   );
