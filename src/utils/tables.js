@@ -28,136 +28,201 @@ export function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export const getTableHeadCells = () => {
-  const headCells = [
-    {
-      id: "code",
-      label: "Código",
-    },
-    {
-      id: "type",
-      label: "Tipo",
-    },
-    {
-      id: "userName",
-      label: "Usuario",
-    },
-    {
-      id: "dni",
-      label: "DNI",
-    },
-    {
-      id: "createdAt",
-      label: "Fecha de inicio",
-    },
-  ];
-
-  return headCells;
-};
-
-function createData(code, type, userName, dni, createdAt) {
+function createData(args) {
   return {
-    code,
-    type,
-    userName,
-    dni,
-    createdAt,
+    ...args,
   };
 }
 
-export const getTableRows = () => {
+export const getTableRowsForPending = () => {
   const rows = [
-    createData(
-      "lic_conducir-0001",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-10T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0002",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-11T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0003",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-12T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0004",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-13T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0005",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-14T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0006",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-15T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0007",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-16T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0008",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-17T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0009",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-18T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0008",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-19T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0010",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-20T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0011",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-21T03:52:40.000Z"
-    ),
-    createData(
-      "lic_conducir-0012",
-      "Licencia de conducir",
-      "Test Uno",
-      "12345678",
-      "2021-08-22T03:52:40.000Z"
-    ),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+    }),
+  ];
+
+  return rows;
+};
+
+export const getTableRowsForInProgress = () => {
+  const rows = [
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Ana Palermo",
+    }),
+    createData({
+      code: "otro_tram-0001",
+      type: "Otro trámite",
+      userName: "Test Dos",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Fernando Belle",
+    }),
+    createData({
+      code: "otro_tram-0001",
+      type: "Otro trámite",
+      userName: "Test Dos",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Fernando Belle",
+    }),
+    createData({
+      code: "otro_tram-0001",
+      type: "Otro trámite",
+      userName: "Test Dos",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      designatedTo: "Fernando Belle",
+    }),
   ];
 
   return rows;
