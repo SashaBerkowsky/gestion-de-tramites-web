@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { Box, Divider, Typography, Button } from "@mui/material";
+
+import {
+  AppBar as MuiAppBar,
+  Box,
+  Divider,
+  Typography,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import AcceptanceDialog from "../components/AcceptanceDialog";
 import DetailData from "../components/DetailData";
 
+
 const DetailPage = () => {
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [isInProgress, setIsInProgress] = useState(false);
+  const [textReject, setTextReject] = useState("");
   let location = useLocation();
   const { code } = useParams();
 
@@ -18,13 +33,26 @@ const DetailPage = () => {
     setOpenAcceptanceModal(false);
   };
   // GET detalle con el codigo de tramite
-  console.log(code);
+
+  function openRejectDialog() {
+    setIsRejectDialogOpen(true);
+  }
+
+  function closeRejectDialog() {
+    setTextReject("");
+    setIsRejectDialogOpen(false);
+  }
+
+  function rejectPaperwork() {
+    //mandar el mensaje rechazo
+
+    closeRejectDialog();
+  }
 
   useEffect(() => {
     setIsInProgress(location.pathname.startsWith("/in-progress"));
   }, [location]);
 
-  console.log(isInProgress);
   return (
     <Box>
       <Box>
@@ -77,6 +105,7 @@ const DetailPage = () => {
           )}
           {isInProgress && (
             <Button
+              onClick={openRejectDialog}
               variant="contained"
               color="error"
               sx={{ marginRight: "5px" }}
@@ -92,6 +121,35 @@ const DetailPage = () => {
       <Divider sx={{ marginTop: "10px" }} />
       <DetailData />
       <AcceptanceDialog open={acceptanceModalOpen} onClose={handleClose} />
+              <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={isRejectDialogOpen}
+        onClose={closeRejectDialog}
+      >
+        <DialogContent>
+          <DialogContentText sx={{ fontWeight: "bold" }}>
+            Indique los motivos por los cuales el tramite ha sido rechazado
+          </DialogContentText>
+          <TextField
+            sx={{ width: "100%", marginTop: 3 }}
+            id="outlined-multiline-static"
+            label="razon de rechazo"
+            multiline
+            rows={6}
+            value={textReject}
+            onChange={({ target }) => setTextReject(target.value)}
+          />
+        </DialogContent>
+        <DialogActions sx={{ paddingRight: 2, paddingBottom: 2 }}>
+          <Button color="info" variant="contained" onClick={closeRejectDialog}>
+            Cancel
+          </Button>
+          <Button color="error" variant="contained" onClick={rejectPaperwork}>
+            Rechazar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
