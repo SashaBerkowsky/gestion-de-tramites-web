@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
+
 import {
   AppBar as MuiAppBar,
   Box,
@@ -12,6 +13,9 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
+import AcceptanceDialog from "../components/AcceptanceDialog";
+import DetailData from "../components/DetailData";
+
 
 const DetailPage = () => {
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
@@ -19,6 +23,15 @@ const DetailPage = () => {
   const [textReject, setTextReject] = useState("");
   let location = useLocation();
   const { code } = useParams();
+
+  const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenAcceptanceModal(true);
+  };
+  const handleClose = () => {
+    setOpenAcceptanceModal(false);
+  };
   // GET detalle con el codigo de tramite
 
   function openRejectDialog() {
@@ -85,6 +98,7 @@ const DetailPage = () => {
               variant="contained"
               color="primary"
               sx={{ marginRight: "5px" }}
+              onClick={handleClickOpen}
             >
               Aprobar
             </Button>
@@ -105,8 +119,9 @@ const DetailPage = () => {
         </Box>
       </Box>
       <Divider sx={{ marginTop: "10px" }} />
-
-      <Dialog
+      <DetailData />
+      <AcceptanceDialog open={acceptanceModalOpen} onClose={handleClose} />
+              <Dialog
         fullWidth
         maxWidth="sm"
         open={isRejectDialogOpen}
