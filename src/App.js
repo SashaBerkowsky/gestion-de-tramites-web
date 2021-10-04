@@ -40,7 +40,7 @@ const theme = createTheme({
 export default function App() {
   const [session, setSession] = useState(getSession());
   useEffect(() => {
-    setSession(getSession());
+    // setSession(getSession());
   }, [session]);
   return (
     <SessionContext.Provider value={session}>

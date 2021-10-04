@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import {
-  AppBar as MuiAppBar,
   Box,
   Divider,
   Typography,
@@ -16,15 +15,15 @@ import {
 import AcceptanceDialog from "../components/AcceptanceDialog";
 import DetailData from "../components/DetailData";
 
-
 const DetailPage = () => {
-  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
-  const [isInProgress, setIsInProgress] = useState(false);
-  const [textReject, setTextReject] = useState("");
   let location = useLocation();
   const { code } = useParams();
-
+  console.log(code);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
+
+  const [isInProgress, setIsInProgress] = useState(false);
+  const [textReject, setTextReject] = useState("");
 
   const handleClickOpen = () => {
     setOpenAcceptanceModal(true);
@@ -32,22 +31,25 @@ const DetailPage = () => {
   const handleClose = () => {
     setOpenAcceptanceModal(false);
   };
+
   // GET detalle con el codigo de tramite
-
-  function openRejectDialog() {
+  const openRejectDialog = () => {
     setIsRejectDialogOpen(true);
-  }
+  };
 
-  function closeRejectDialog() {
+  const closeRejectDialog = () => {
     setTextReject("");
     setIsRejectDialogOpen(false);
-  }
+  };
 
-  function rejectPaperwork() {
-    //mandar el mensaje rechazo
-
+  const rejectPaperwork = () => {
+    // TODO mandar el mensaje rechazo
     closeRejectDialog();
-  }
+  };
+
+  const handleChange = (event) => {
+    setTextReject(event.target.value);
+  };
 
   useEffect(() => {
     setIsInProgress(location.pathname.startsWith("/in-progress"));
@@ -121,7 +123,7 @@ const DetailPage = () => {
       <Divider sx={{ marginTop: "10px" }} />
       <DetailData />
       <AcceptanceDialog open={acceptanceModalOpen} onClose={handleClose} />
-              <Dialog
+      <Dialog
         fullWidth
         maxWidth="sm"
         open={isRejectDialogOpen}
@@ -138,7 +140,7 @@ const DetailPage = () => {
             multiline
             rows={6}
             value={textReject}
-            onChange={({ target }) => setTextReject(target.value)}
+            onChange={handleChange}
           />
         </DialogContent>
         <DialogActions sx={{ paddingRight: 2, paddingBottom: 2 }}>

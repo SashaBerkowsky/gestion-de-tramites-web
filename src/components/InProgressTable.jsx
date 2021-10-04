@@ -26,9 +26,9 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) => (
+        {headCells.map((headCell, index) => (
           <TableCell
-            key={headCell.id}
+            key={index}
             align={"left"}
             padding={"normal"}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -57,9 +57,7 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -120,7 +118,7 @@ export default function InProgressTable({ headCells, rows }) {
                 .map((row, index) => {
                   console.log(row);
                   return (
-                    <TableRow tabIndex={-1} key={row.name}>
+                    <TableRow tabIndex={-1} key={index}>
                       <TableCell align="left">{row.code}</TableCell>
                       <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">{row.userName}</TableCell>
