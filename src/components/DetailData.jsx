@@ -1,4 +1,6 @@
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { SessionContext } from "../session";
 import {
 	Box,
 	Button,
@@ -12,6 +14,7 @@ import {
 	Slide,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
+import DetailStepper from "../components/DetailStepper";
 import imagePlaceholder from "../assets/images/ejemplo imagen.png";
 
 const amountOfColumns = 2;
@@ -38,6 +41,10 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const DetailData = () => {
+	const sessionData = useContext(SessionContext);
+	const { pathname } = useLocation();
+	const isStepperActive =
+		sessionData.role === "responsable" && pathname.startsWith("/in-progress");
 	const [selectedImg, setSelectedImg] = useState({});
 	const [isImgSelected, setIsImgSelected] = useState(false);
 
@@ -58,64 +65,74 @@ const DetailData = () => {
 	}
 
 	return (
-		<Box sx={{ marginTop: 4 }}>
-			<Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Tipo de tramite:
+		<Box
+			sx={{ marginTop: 4, display: "flex", justifyContent: "space-between" }}
+		>
+			<Box width='50%'>
+				<Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Tipo de tramite:
+						</Box>
+						{paperworkExample.formType}
 					</Box>
-					{paperworkExample.formType}
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Número de DNI:
+						</Box>
+						{paperworkExample.idCard}
+					</Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Nombre:
+						</Box>
+						{paperworkExample.name}
+					</Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Apellido:
+						</Box>
+						{paperworkExample.surname}
+					</Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Domicilio:
+						</Box>
+						{paperworkExample.address}
+					</Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Fecha de nacimiento:
+						</Box>
+						{paperworkExample.birthdate}
+					</Box>
+					<Box as='p' color='text.primary'>
+						<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
+							Tipo de licencia:
+						</Box>
+						{paperworkExample.licenceType}
+					</Box>
 				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Número de DNI:
-					</Box>
-					{paperworkExample.idCard}
-				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Nombre:
-					</Box>
-					{paperworkExample.name}
-				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Apellido:
-					</Box>
-					{paperworkExample.surname}
-				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Domicilio:
-					</Box>
-					{paperworkExample.address}
-				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Fecha de nacimiento:
-					</Box>
-					{paperworkExample.birthdate}
-				</Box>
-				<Box as='p' color='text.primary'>
-					<Box as='span' sx={{ fontWeight: "bold", marginRight: 1 }}>
-						Tipo de licencia:
-					</Box>
-					{paperworkExample.licenceType}
+				<Box>
+					<ImageList cols={amountOfColumns} gap={8}>
+						{paperworkExample.images.map((image, idx) => (
+							<ImageListItem key={idx} onClick={() => handleImageClick(image)}>
+								<img src={image.src} alt={image.desc} />
+								<ImageListItemBar
+									sx={{ textAlign: "center" }}
+									title={image.desc}
+								/>
+							</ImageListItem>
+						))}
+					</ImageList>
 				</Box>
 			</Box>
-			<Box sx={{ width: 0.5 }}>
-				<ImageList cols={amountOfColumns} gap={8}>
-					{paperworkExample.images.map((image, idx) => (
-						<ImageListItem key={idx} onClick={() => handleImageClick(image)}>
-							<img src={image.src} alt={image.desc} />
-							<ImageListItemBar
-								sx={{ textAlign: "center" }}
-								title={image.desc}
-							/>
-						</ImageListItem>
-					))}
-				</ImageList>
-			</Box>
+			{isStepperActive && (
+				<Box width='35%'>
+					<DetailStepper />
+				</Box>
+			)}
+
 			<Dialog
 				open={isImgSelected}
 				onClose={handleDialogClose}
