@@ -9,6 +9,6 @@ export function getSession() {
     userName: "",
     userLastName: "",
     role: "responsable",
-    //role: "analista",
+    // role: "analista",
   };
 }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { NavLink as NLink } from "react-router-dom";
 import ciudadesFuturo from "../assets/images/logo.png";
+import { SessionContext } from "../session";
 
 const drawerWidth = 0.2;
 
@@ -90,6 +91,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function PersistentDrawerLeft({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const sessionData = useContext(SessionContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -159,8 +161,12 @@ export default function PersistentDrawerLeft({ children }) {
             <Avatar sx={{ width: 42, height: 42, fontSize: "22px" }}>S</Avatar>
             <Box sx={{ paddingLeft: 2, width: 1 }}>
               <Typography sx={{ fontWeight: 450 }}>Sasha Berkowsky</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Analista
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ textTransform: "capitalize" }}
+              >
+                {sessionData.role}
               </Typography>
             </Box>
           </CardContent>

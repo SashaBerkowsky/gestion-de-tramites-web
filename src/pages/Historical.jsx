@@ -83,7 +83,7 @@ const HistoricalPage = () => {
         mb={3}
       >
         <Grid item md={4}>
-          <CounterCard title="Historicos totales" counter="1005" size={12} />
+          <CounterCard title="Historicos totales" counter="1005" fullSize />
         </Grid>
         <Grid item md={4}></Grid>
         <Grid item md={4}>
