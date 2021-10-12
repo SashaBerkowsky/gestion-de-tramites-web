@@ -8,6 +8,7 @@ export function getSession() {
     email: "",
     userName: "",
     userLastName: "",
-    role: "analista",
+    role: "responsable",
+    //role: "analista",
   };
 }
