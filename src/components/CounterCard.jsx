@@ -1,8 +1,8 @@
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 
-const CounterCard = ({ title, counter }) => {
+const CounterCard = ({ title, counter, fullsize }) => {
 	return (
-		<Grid item xs={4}>
+		<Grid item xs={fullsize ? 12 : 4}>
 			<Card>
 				<CardContent>
 					<Typography
