@@ -227,3 +227,43 @@ export const getTableRowsForInProgress = () => {
 
   return rows;
 };
+
+export const getTableRowsForHistorical = () => {
+  const rows = [
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      finishedAt: "2021-08-11T03:52:40.000Z",
+      analyst: "Ana P",
+      evaluator: "Sergio G",
+      state: "Aprobado",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      finishedAt: "2021-08-11T03:52:40.000Z",
+      analyst: "Ana P",
+      evaluator: "Sergio G",
+      state: "Cerrado",
+    }),
+    createData({
+      code: "lic_conducir-0001",
+      type: "Licencia de conducir",
+      userName: "Test Uno",
+      dni: "12345678",
+      createdAt: "2021-08-10T03:52:40.000Z",
+      finishedAt: "2021-08-11T03:52:40.000Z",
+      analyst: "Ana P",
+      evaluator: "-",
+      state: "Rechazado",
+    }),
+  ];
+
+  return rows;
+};
