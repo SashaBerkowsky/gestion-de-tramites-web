@@ -13,6 +13,10 @@ import PendingPage from "./pages/Pending";
 import HistoricalPage from "./pages/Historical";
 import { SessionContext, getSession } from "./session";
 
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
+
 const theme = createTheme({
   palette: {
     text: {
@@ -43,46 +47,48 @@ export default function App() {
     // setSession(getSession());
   }, [session]);
   return (
-    <SessionContext.Provider value={session}>
-      <Router>
-        <ThemeProvider theme={theme}>
-          <NavDrawer>
-            <div>
-              {/* A <Switch> looks through its children <Route>s and
+    <QueryClientProvider client={queryClient}>
+      <SessionContext.Provider value={session}>
+        <Router>
+          <ThemeProvider theme={theme}>
+            <NavDrawer>
+              <div>
+                {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-              <Switch>
-                <Route path="/sign-in">
-                  <SignInPage />
-                </Route>
-                <Route path="/password">
-                  <PasswordPage />
-                </Route>
-                <Route path="/profile">
-                  <ProfilePage />
-                </Route>
-                <Route exact path="/in-progress">
-                  <InProgressPage />
-                </Route>
-                <Route path="/in-progress/:code">
-                  <DetailPage />
-                </Route>
-                <Route path="/detail/:code">
-                  <DetailPage />
-                </Route>
-                <Route path="/pending">
-                  <PendingPage />
-                </Route>
-                <Route path="/historical">
-                  <HistoricalPage />
-                </Route>
-                <Route path="/">
-                  <DashboardPage />
-                </Route>
-              </Switch>
-            </div>
-          </NavDrawer>
-        </ThemeProvider>
-      </Router>
-    </SessionContext.Provider>
+                <Switch>
+                  <Route path="/sign-in">
+                    <SignInPage />
+                  </Route>
+                  <Route path="/password">
+                    <PasswordPage />
+                  </Route>
+                  <Route path="/profile">
+                    <ProfilePage />
+                  </Route>
+                  <Route exact path="/in-progress">
+                    <InProgressPage />
+                  </Route>
+                  <Route path="/in-progress/:code">
+                    <DetailPage />
+                  </Route>
+                  <Route path="/detail/:code">
+                    <DetailPage />
+                  </Route>
+                  <Route path="/pending">
+                    <PendingPage />
+                  </Route>
+                  <Route path="/historical">
+                    <HistoricalPage />
+                  </Route>
+                  <Route path="/">
+                    <DashboardPage />
+                  </Route>
+                </Switch>
+              </div>
+            </NavDrawer>
+          </ThemeProvider>
+        </Router>
+      </SessionContext.Provider>
+    </QueryClientProvider>
   );
 }
