@@ -3,8 +3,21 @@ import { getTableRowsForPending } from "../utils/tables";
 import { Box } from "@mui/material";
 import PendingTable from "../components/PendingTable";
 import CounterCard from "../components/CounterCard";
+import { useQuery } from "react-query";
 
 const PendingPage = () => {
+  const { isLoading, error, data, isFetching } = useQuery(
+    "pendingProcedures",
+    () =>
+      fetch("http://localhost:3000/api/procedures/pending").then((res) =>
+        res.json()
+      )
+  );
+
+  if (isLoading) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
   const headCells = [
     {
       id: "code",
