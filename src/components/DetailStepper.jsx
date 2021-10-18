@@ -47,11 +47,41 @@ const CustomStepper = styled(Stepper)(({ theme }) => ({
 const DetailStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [appointmentDate, setAppointmentDate] = useState(new Date());
+  const [isDateValid, setIsDateValid] = useState(false);
+  const [dateErrorMsg, setDateErrorMsg] = useState("");
   const [isDatePickerActive, setIsDatePickerActive] = useState(false);
 
-  //Validar si llego con el tiempo
-  const isValidHour = (hour) => {
-    return hour > 8 && hour < 20;
+  const validateDate = (newValue) => {
+    const selectedDate = newValue._d;
+    const initDate = newValue._i;
+
+    console.log(initDate.getDate());
+
+    // saturday === 0, monday === 1, tuesday === 2, etc
+    const selectedDay = selectedDate.getDay();
+    const selectedHour = selectedDate.getHours();
+    const selectedDateNumber = selectedDate.getDate();
+
+    const initDateNumber = initDate.getDate();
+    const initHour = initDate.getHours();
+
+    const isWeekDay = selectedDay !== 0 && selectedDay !== 6;
+    const isHourValid = selectedHour >= 8 && selectedHour < 20;
+    const isDateOld =
+      selectedDateNumber <= initDateNumber && selectedHour <= initHour;
+
+    setIsDateValid(isWeekDay && isHourValid && !isDateOld);
+    if (!isDateValid) {
+      if (isDateOld) {
+        setDateErrorMsg("Elija una fecha valida");
+      } else if (!isWeekDay) {
+        setDateErrorMsg("Elija un dia de semana");
+      } else if (!isHourValid) {
+        setDateErrorMsg("Elija un horario laboral");
+      }
+    } else {
+      setDateErrorMsg("");
+    }
   };
 
   const handleNextStep = () => {
@@ -63,6 +93,7 @@ const DetailStepper = () => {
   };
 
   const handleDateChange = (newValue) => {
+    validateDate(newValue);
     setAppointmentDate(newValue);
   };
 
@@ -79,6 +110,7 @@ const DetailStepper = () => {
   };
 
   const handleAppointmentCreation = () => {
+    console.log("appointmentDate", appointmentDate.toString());
     setIsDatePickerActive(false);
     handleNextStep();
   };
@@ -152,12 +184,9 @@ const DetailStepper = () => {
               <LocalizationProvider dateAdapter={DateAdapter}>
                 <MobileDateTimePicker
                   label="Fecha de trámite"
-                  inputFormat="DD/MM/YYYY HH:MM"
+                  inputFormat="DD/MM/YYYY hh:mm"
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      /* error={isValidHour(appointmentDate.hours)} */
-                    />
+                    <TextField {...params} helperText={dateErrorMsg} />
                   )}
                   value={appointmentDate}
                   onChange={handleDateChange}
@@ -181,6 +210,7 @@ const DetailStepper = () => {
             color="primary"
             variant="contained"
             size="small"
+            disabled={!isDateValid}
           >
             Asignar
           </Button>

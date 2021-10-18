@@ -10,7 +10,6 @@ import { useAuth } from "../session";
 const DetailPage = () => {
   let location = useLocation();
   const { currentUser } = useAuth();
-  const sessionData = currentUser.userRole;
   const { code } = useParams();
   console.log(code);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
@@ -132,7 +131,7 @@ const DetailPage = () => {
         <Box>
           {isInProgress && (
             <>
-              {sessionData === "analista" && (
+              {currentUser.role === "analista" && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -142,7 +141,7 @@ const DetailPage = () => {
                   Aprobar
                 </Button>
               )}
-              {sessionData === "responsable" && (
+              {currentUser.role === "responsable" && (
                 <Button
                   variant="contained"
                   color="error"
@@ -154,7 +153,7 @@ const DetailPage = () => {
               )}
             </>
           )}
-          {isInProgress && sessionData === "analista" && (
+          {isInProgress && currentUser.role === "analista" && (
             <Button
               onClick={openRejectDialog}
               variant="contained"
@@ -182,7 +181,7 @@ const DetailPage = () => {
         isRejectDialogOpen={isRejectDialogOpen}
         textMessageDialog="Indique los motivos por los cuales el tramite ha sido rechazado"
         textButton="Rechazar"
-        reason="razón de rechazo"
+        reason="Razón de rechazo"
       />
       <RejectionDialog
         closeRejectDialog={closeDialog}
