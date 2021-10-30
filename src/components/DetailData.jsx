@@ -46,7 +46,8 @@ const DetailData = () => {
   const [isImgSelected, setIsImgSelected] = useState(false);
   const { currentUser } = useAuth();
   const isStepperActive =
-    currentUser.role === "responsable" && pathname.startsWith("/in-progress");
+    currentUser.userRole === "responsable" &&
+    pathname.startsWith("/in-progress");
 
   function handleImageClick(image) {
     setSelectedImg(image);
