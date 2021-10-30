@@ -32,13 +32,13 @@ export function AuthProvider({ children }) {
     let userMunicipio = null;
     try {
       const rawUser = await getUserMunicipio(user.email);
-
       userMunicipio = {
         ...user,
         userId: rawUser.user.id,
         userRole: rawUser.user.municipalRoleCode.toLowerCase(),
         name: rawUser.user.name,
         surname: rawUser.user.surname,
+        idMunicipalRole: rawUser.user.idMunicipalRole,
       };
     } catch (err) {
       // Al llegar a este error firebase nunca va a autenticar al usuario
