@@ -4,19 +4,19 @@ import { Box } from "@mui/material";
 import PendingTable from "../components/PendingTable";
 import CounterCard from "../components/CounterCard";
 import { useQuery } from "react-query";
+import { getPendingProcedures } from "../api/procedures";
 
 const PendingPage = () => {
   const { isLoading, error, data, isFetching } = useQuery(
     "pendingProcedures",
-    () =>
-      fetch("http://localhost:3000/api/procedures/pending").then((res) =>
-        res.json()
-      )
+    getPendingProcedures
   );
 
-  if (isLoading) return "Loading...";
+  console.log(data);
 
-  if (error) return "An error has occurred: " + error.message;
+  // if (isLoading) return "Loading...";
+
+  // if (error) return "An error has occurred: " + error.message;
 
   const headCells = [
     {
