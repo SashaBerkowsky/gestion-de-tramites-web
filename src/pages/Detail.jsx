@@ -131,7 +131,7 @@ const DetailPage = () => {
         <Box>
           {isInProgress && (
             <>
-              {currentUser.role === "analista" && (
+              {currentUser.userRole === "analista" && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -141,7 +141,7 @@ const DetailPage = () => {
                   Aprobar
                 </Button>
               )}
-              {currentUser.role === "responsable" && (
+              {currentUser.userRole === "responsable" && (
                 <Button
                   variant="contained"
                   color="error"
@@ -153,7 +153,7 @@ const DetailPage = () => {
               )}
             </>
           )}
-          {isInProgress && currentUser.role === "analista" && (
+          {isInProgress && currentUser.userRole === "analista" && (
             <Button
               onClick={openRejectDialog}
               variant="contained"
