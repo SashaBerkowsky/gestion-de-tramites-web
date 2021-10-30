@@ -7,8 +7,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function AlertDialog({ isopen, closeDialog, observations }) {
-  const listItems = observations.map((obs) => (
-    <li style={{ marginBottom: 30 }}>
+  const listItems = observations.map((obs, i) => (
+    <li style={{ marginBottom: 30 }} key={i}>
       {obs.date} - {obs.state} - {obs.prof}
       {obs.turn ? " - Turno: " + obs.turn : ""}
       {obs.note ? " - Nota: " + obs.note : ""}

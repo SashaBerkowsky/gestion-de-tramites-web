@@ -52,7 +52,7 @@ export default function App() {
                 {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
                 <Switch>
-                  <Route path="/sign-in">
+                  <Route exact path="/sign-in">
                     <SignInPage />
                   </Route>
                   <PrivateRoute
