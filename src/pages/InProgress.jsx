@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { getTableRowsForInProgress } from "../utils/tables";
 import InProgressTable from "../components/InProgressTable";
 import CounterCard from "../components/CounterCard";
-import { SessionContext } from "../session";
 import {
   Grid,
   Box,
@@ -11,16 +10,17 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
+import { useAuth } from "../session";
 
 const InProgressPage = () => {
-  const session = useContext(SessionContext);
+  const { currentUser } = useAuth();
+  const sessionData = currentUser.userRole;
   const [selectedPerson, setSelectedPerson] = useState("");
 
   const handleChange = (event) => {
     setSelectedPerson(event.target.value);
   };
 
-  const rol = session.role;
   const headCells = [
     {
       id: "code",
@@ -44,7 +44,7 @@ const InProgressPage = () => {
     },
     {
       id: "designatedTo",
-      label: rol,
+      label: sessionData,
     },
   ];
   const rows = getTableRowsForInProgress();
@@ -69,7 +69,7 @@ const InProgressPage = () => {
               id="demo-simple-select-standard-label"
               sx={{ textTransform: "capitalize" }}
             >
-              {rol}
+              {sessionData}
             </InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"

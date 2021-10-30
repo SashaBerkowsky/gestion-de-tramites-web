@@ -3,16 +3,16 @@ import { getTableRowsForPending } from "../utils/tables";
 import { Box } from "@mui/material";
 import PendingTable from "../components/PendingTable";
 import CounterCard from "../components/CounterCard";
-import { useQuery } from "react-query";
-import { getPendingProcedures } from "../api/procedures";
+// import { useQuery } from "react-query";
+// import { getPendingProcedures } from "../api/procedures";
 
 const PendingPage = () => {
-  const { isLoading, error, data, isFetching } = useQuery(
-    "pendingProcedures",
-    getPendingProcedures
-  );
+  // const { isLoading, error, data, isFetching } = useQuery(
+  //   "pendingProcedures",
+  //   getPendingProcedures
+  // );
 
-  console.log(data);
+  // console.log(data);
 
   // if (isLoading) return "Loading...";
 

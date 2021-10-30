@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { SessionContext } from "../session";
 import { Box, Divider, Typography, Button } from "@mui/material";
 import AcceptanceDialog from "../components/AcceptanceDialog";
 import DetailData from "../components/DetailData";
 import RejectionDialog from "../components/RejectionDialog";
 import ObservationDialog from "../components/ObservationDialog";
+import { useAuth } from "../session";
 
 const DetailPage = () => {
   let location = useLocation();
-  const session = useContext(SessionContext);
+  const { currentUser } = useAuth();
+  const sessionData = currentUser.userRole;
   const { code } = useParams();
   console.log(code);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
@@ -131,7 +132,7 @@ const DetailPage = () => {
         <Box>
           {isInProgress && (
             <>
-              {session.role === "analista" && (
+              {sessionData === "analista" && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -141,7 +142,7 @@ const DetailPage = () => {
                   Aprobar
                 </Button>
               )}
-              {session.role === "responsable" && (
+              {sessionData === "responsable" && (
                 <Button
                   variant="contained"
                   color="error"
@@ -153,7 +154,7 @@ const DetailPage = () => {
               )}
             </>
           )}
-          {isInProgress && session.role === "analista" && (
+          {isInProgress && sessionData === "analista" && (
             <Button
               onClick={openRejectDialog}
               variant="contained"

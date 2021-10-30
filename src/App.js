@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NavDrawer from "./components/NavDrawer";
 import DashboardPage from "./pages/Dashboard";
-import ProfilePage from "./pages/Perfil";
 import SignInPage from "./pages/SignIn";
 import PasswordPage from "./pages/Password";
 
@@ -11,9 +10,10 @@ import InProgressPage from "./pages/InProgress";
 import DetailPage from "./pages/Detail";
 import PendingPage from "./pages/Pending";
 import HistoricalPage from "./pages/Historical";
-import { SessionContext, getSession } from "./session";
+import { AuthProvider } from "./session";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+import PrivateRoute from "./components/PrivateRoute";
 
 const queryClient = new QueryClient();
 
@@ -42,13 +42,9 @@ const theme = createTheme({
 });
 
 export default function App() {
-  const [session, setSession] = useState(getSession());
-  useEffect(() => {
-    // setSession(getSession());
-  }, [session]);
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionContext.Provider value={session}>
+      <AuthProvider>
         <Router>
           <ThemeProvider theme={theme}>
             <NavDrawer>
@@ -59,36 +55,35 @@ export default function App() {
                   <Route path="/sign-in">
                     <SignInPage />
                   </Route>
-                  <Route path="/password">
-                    <PasswordPage />
-                  </Route>
-                  <Route path="/profile">
-                    <ProfilePage />
-                  </Route>
-                  <Route exact path="/in-progress">
-                    <InProgressPage />
-                  </Route>
-                  <Route path="/in-progress/:code">
-                    <DetailPage />
-                  </Route>
-                  <Route path="/detail/:code">
-                    <DetailPage />
-                  </Route>
-                  <Route path="/pending">
-                    <PendingPage />
-                  </Route>
-                  <Route path="/historical">
-                    <HistoricalPage />
-                  </Route>
-                  <Route path="/">
-                    <DashboardPage />
-                  </Route>
+                  <PrivateRoute
+                    exact
+                    path="/password"
+                    component={PasswordPage}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/in-progress"
+                    component={InProgressPage}
+                  />
+                  <PrivateRoute exact path="/pending" component={PendingPage} />
+                  <PrivateRoute
+                    exact
+                    path="/in-progress/:code"
+                    component={DetailPage}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/detail/:code"
+                    component={DetailPage}
+                  />
+                  <PrivateRoute path="/historical" component={HistoricalPage} />
+                  <PrivateRoute exact path="/" component={DashboardPage} />
                 </Switch>
               </div>
             </NavDrawer>
           </ThemeProvider>
         </Router>
-      </SessionContext.Provider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

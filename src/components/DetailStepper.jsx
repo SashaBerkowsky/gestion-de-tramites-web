@@ -79,7 +79,6 @@ const DetailStepper = () => {
   };
 
   const handleAppointmentCreation = () => {
-    console.log("appointmentDate", appointmentDate.toString());
     setIsDatePickerActive(false);
     handleNextStep();
   };
