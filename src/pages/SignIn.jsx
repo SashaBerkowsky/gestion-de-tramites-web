@@ -22,7 +22,6 @@ const SignInPage = () => {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  // const data = { email: "nico@gmail.com", pass: "Nico123" };
 
   const isFieldvalid = email === "" || password === "";
 
@@ -33,8 +32,12 @@ const SignInPage = () => {
         setPassError({ errorText: "", error: false });
         setLoading(true);
         await login(email, password);
-        setLoading(false);
-        history.push("/");
+        setTimeout(() => {
+          setLoading(false);
+          // TODO: Se ve que history renderiza despues que la app entonces no llega a pushear, por eso el setTimeout
+          // https://stackoverflow.com/questions/50925939/react-history-push-not-rendering-new-component
+          history.push("/");
+        }, 1000);
       } catch (err) {
         setLoading(false);
         console.log(err);

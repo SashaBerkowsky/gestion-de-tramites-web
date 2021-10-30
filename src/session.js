@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { getUserMunicipio } from "./api/user";
 import { auth } from "./firebase";
 
 const AuthContext = React.createContext();
@@ -27,16 +28,30 @@ export function AuthProvider({ children }) {
     return auth.sendPasswordResetEmail(email);
   }
 
+  async function getCurrentUser(user) {
+    let userMunicipio = null;
+    try {
+      const rawUser = await getUserMunicipio(user.email);
+      userMunicipio = {
+        ...user,
+        userId: rawUser.user.id,
+        userRole: rawUser.user.municipalRoleCode.toLowerCase(),
+        name: rawUser.user.name,
+        surname: rawUser.user.surname,
+        idMunicipalRole: rawUser.user.idMunicipalRole,
+      };
+    } catch (err) {
+      // Al llegar a este error firebase nunca va a autenticar al usuario
+      console.log("getCurrentUser ERR", err.message);
+    }
+    return userMunicipio;
+  }
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       let userMunicipal = null;
       if (!!user) {
-        userMunicipal = {
-          ...user,
-          name: "Monica",
-          surname: "Argento",
-          userRole: "analista",
-        };
+        userMunicipal = await getCurrentUser(user);
       }
       setCurrentUser(userMunicipal);
       setLoading(false);
