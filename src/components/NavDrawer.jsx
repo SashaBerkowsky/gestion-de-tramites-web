@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -20,9 +20,9 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { NavLink as NLink } from "react-router-dom";
+import { NavLink as NLink, useHistory } from "react-router-dom";
 import ciudadesFuturo from "../assets/images/logo.png";
-import { SessionContext } from "../session";
+import { useAuth } from "../session";
 
 const drawerWidth = 0.2;
 
@@ -90,8 +90,19 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function PersistentDrawerLeft({ children }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-  const sessionData = useContext(SessionContext);
+  const [open, setOpen] = React.useState(false);
+  const { currentUser, logout } = useAuth();
+  const history = useHistory();
+
+  async function handleSingOut() {
+    try {
+      await logout();
+      setOpen(false);
+      history.push("/sign-in");
+    } catch {
+      console.log("Failed to log out");
+    }
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -100,22 +111,23 @@ export default function PersistentDrawerLeft({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <Box display="flex" flexGrow={1}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: "none" }) }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {currentUser !== null && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{ mr: 2, ...(open && { display: "none" }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
           </Box>
           <img
             src={ciudadesFuturo}
@@ -159,16 +171,20 @@ export default function PersistentDrawerLeft({ children }) {
             }}
           >
             <Avatar sx={{ width: 42, height: 42, fontSize: "22px" }}>S</Avatar>
-            <Box sx={{ paddingLeft: 2, width: 1 }}>
-              <Typography sx={{ fontWeight: 450 }}>Sasha Berkowsky</Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ textTransform: "capitalize" }}
-              >
-                {sessionData.role}
-              </Typography>
-            </Box>
+            {currentUser !== null && (
+              <Box sx={{ paddingLeft: 2, width: 1 }}>
+                <Typography sx={{ fontWeight: 450 }}>
+                  {currentUser.name} {currentUser.surname}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textTransform: "capitalize" }}
+                >
+                  {currentUser.userRole}
+                </Typography>
+              </Box>
+            )}
           </CardContent>
         </Card>
         <Box sx={{ paddingLeft: 3 }}>
@@ -197,12 +213,11 @@ export default function PersistentDrawerLeft({ children }) {
           </Typography>
 
           <MenuList>
-            <NavLink to="profile">
-              <MenuItem>Perfil</MenuItem>
+            <NavLink to="/password">
+              <MenuItem>Cambiar contraseña</MenuItem>
             </NavLink>
-            <NavLink to="sign-in">
-              <MenuItem>Cerrar Sesion</MenuItem>
-            </NavLink>
+
+            <MenuItem onClick={handleSingOut}>Cerrar Sesion</MenuItem>
           </MenuList>
         </Box>
       </Drawer>

@@ -116,7 +116,6 @@ export default function InProgressTable({ headCells, rows }) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  console.log(row);
                   return (
                     <TableRow tabIndex={-1} key={index}>
                       <TableCell align="left">{row.code}</TableCell>

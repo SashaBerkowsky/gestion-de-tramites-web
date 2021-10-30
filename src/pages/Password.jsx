@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -6,86 +6,50 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useAuth } from "../session";
+import Loader from "../components/Loader";
 
 const PasswordPage = () => {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [newPassword2, setNewPassword2] = useState("");
-  const [errorCurrent, setErrorCurrent] = useState({
-    errorCurrent: false,
-    errorCurrentText: "",
-  });
-  const [errorPass, setErrorPass] = useState({
-    newErrorPass: false,
-    newErrorPassText: "",
-  });
-  const [errorPass2, setErrorPass2] = useState({
-    newErrorPass2: false,
-    newErrorPassText2: "",
-  });
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState({ errorText: "", error: false });
+  const emailRegex = new RegExp(
+    "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" +
+      "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$"
+  );
+  const { currentUser, resetPassword } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  const pass = "Nico123";
+  const isFieldvalid = email === "";
 
-  const currentPassValid = () => {
-    console.log(currentPassword);
-
-    console.log(pass);
-    if (currentPassword !== pass) {
-      console.log("entra");
-      setErrorCurrent({
-        errorCurrent: true,
-        errorCurrentText: "La contraseña no coincide con la actual",
+  const handleResetPassword = async () => {
+    if (!emailRegex.test(email)) {
+      setEmailError({
+        errorText: "Formato de email incorrecto",
+        error: true,
       });
-    } else {
-      setErrorCurrent({
-        errorCurrent: false,
-        errorCurrentText: "",
-      });
-    }
-  };
-
-  const isEmpty = () =>
-    currentPassword === "" || newPassword === "" || newPassword2 === "";
-
-  const validNewPass = () => {
-    if (
-      !(
-        newPassword.match(/[A-Z]/) &&
-        newPassword.match(/[0-9]/) &&
-        newPassword !== currentPassword
-      )
+    } else if (
+      email !== currentUser.email &&
+      email !== "gestiondetramitesort@gmail.com"
     ) {
-      setErrorPass({
-        newErrorPassText:
-          "La nueva contraseña tiene que contener una mayuscula, una minuscula ",
-        newErrorPass: true,
+      setEmailError({
+        errorText: "Este email no posee la autorización necesaria",
+        error: true,
       });
     } else {
-      setErrorPass({
-        newErrorPassText: "",
-        newErrorPass: false,
-      });
+      try {
+        setEmailError({ errorText: "", error: false });
+        setLoading(true);
+        await resetPassword(email);
+        setEmail("");
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
     }
   };
-  function samePasswords() {
-    if (!(newPassword === newPassword2 && newPassword !== currentPassword)) {
-      setErrorPass2({
-        newErrorPass2: true,
-        newErrorPassText2: "Las contraseñas no son iguales ",
-      });
-    } else {
-      setErrorPass2({
-        newErrorPass2: false,
-        newErrorPassText2: "",
-      });
-    }
-  }
-  const handleChangePass = () => {
-    currentPassValid();
-    validNewPass();
-    samePasswords();
-  };
+
+  if (loading) return <Loader />;
 
   return (
     <Box
@@ -100,39 +64,20 @@ const PasswordPage = () => {
           <Typography sx={{ fontSize: 14 }} color="primary" variant="h6">
             CAMBIAR CONTRASEÑA
           </Typography>
+          <Typography sx={{ fontSize: 12 }} variant="h6">
+            Le enviaremos un correo para cambiar su contraseña
+          </Typography>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <TextField
-              error={errorCurrent.errorCurrent}
-              helperText={errorCurrent.errorCurrentText}
-              type="password"
+              type="text"
               sx={{ marginTop: 1.5 }}
-              id="currentPass"
-              label="Contraseña actual"
+              id="passwordEmail"
+              label="Ingrese su email"
               variant="standard"
-              value={currentPassword}
-              onChange={({ target }) => setCurrentPassword(target.value)}
-            />
-            <TextField
-              type="password"
-              sx={{ marginTop: 1.5 }}
-              id="newPass"
-              label="Nueva contraseña"
-              variant="standard"
-              value={newPassword}
-              onChange={({ target }) => setNewPassword(target.value)}
-              error={errorPass.newErrorPass}
-              helperText={errorPass.newErrorPassText}
-            />
-            <TextField
-              type="password"
-              sx={{ marginTop: 1.5 }}
-              id="repeatNewPass"
-              label="Confirmar contraseña"
-              variant="standard"
-              value={newPassword2}
-              onChange={({ target }) => setNewPassword2(target.value)}
-              error={errorPass2.newErrorPass2}
-              helperText={errorPass2.newErrorPassText2}
+              value={email}
+              onChange={({ target }) => setEmail(target.value)}
+              error={emailError.error}
+              helperText={emailError.errorText}
             />
           </Box>
         </CardContent>
@@ -142,12 +87,10 @@ const PasswordPage = () => {
           <Button
             variant="contained"
             color="secondary"
-            disabled={isEmpty()}
-            onClick={() => {
-              handleChangePass();
-            }}
+            disabled={isFieldvalid}
+            onClick={handleResetPassword}
           >
-            Entrar
+            Enviar
           </Button>
         </CardActions>
       </Card>

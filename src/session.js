@@ -1,14 +1,61 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { auth } from "./firebase";
 
-export const SessionContext = React.createContext(getSession());
+const AuthContext = React.createContext();
 
-export function getSession() {
-  // TODO hacer todo lo de login aca
-  return {
-    email: "",
-    userName: "",
-    userLastName: "",
-    role: "responsable",
-    // role: "analista",
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState();
+  const [loading, setLoading] = useState(true);
+
+  function signup(email, password) {
+    return auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  function login(email, password) {
+    return auth.signInWithEmailAndPassword(email, password);
+  }
+
+  function logout() {
+    return auth.signOut();
+  }
+
+  function resetPassword(email) {
+    return auth.sendPasswordResetEmail(email);
+  }
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      let userMunicipal = null;
+      if (!!user) {
+        userMunicipal = {
+          ...user,
+          name: "Monica",
+          surname: "Argento",
+          userRole: "analista",
+        };
+      }
+      setCurrentUser(userMunicipal);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const value = {
+    currentUser,
+    login,
+    signup,
+    logout,
+    resetPassword,
   };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
