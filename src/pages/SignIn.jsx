@@ -37,7 +37,7 @@ const SignInPage = () => {
           // TODO: Se ve que history renderiza despues que la app entonces no llega a pushear, por eso el setTimeout
           // https://stackoverflow.com/questions/50925939/react-history-push-not-rendering-new-component
           history.push("/");
-        }, 1000);
+        }, 2000);
       } catch (err) {
         setLoading(false);
         console.log(err);

@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { getTableRowsForPending } from "../utils/tables";
 import { Box } from "@mui/material";
 import PendingTable from "../components/PendingTable";
 import CounterCard from "../components/CounterCard";
-// import { useQuery } from "react-query";
-// import { getPendingProcedures } from "../api/procedures";
+import { useQuery } from "react-query";
+import { getPendingProcedures } from "../api/procedures";
+import Loader from "../components/Loader";
 
 const PendingPage = () => {
-  // const { isLoading, error, data, isFetching } = useQuery(
-  //   "pendingProcedures",
-  //   getPendingProcedures
-  // );
+  const { isLoading: isLoadingProcedures, data: pendingProcedures } = useQuery(
+    "getPendingProcedures",
+    getPendingProcedures
+  );
 
-  // console.log(data);
+  if (isLoadingProcedures) return <Loader />;
 
-  // if (isLoading) return "Loading...";
-
-  // if (error) return "An error has occurred: " + error.message;
+  console.log(pendingProcedures);
 
   const headCells = [
     {
