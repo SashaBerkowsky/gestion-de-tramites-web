@@ -1,3 +1,5 @@
+import moment from "moment";
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -34,93 +36,25 @@ function createData(args) {
   };
 }
 
-export const getTableRowsForPending = () => {
-  const rows = [
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-    createData({
-      code: "lic_conducir-0001",
-      type: "Licencia de conducir",
-      userName: "Test Uno",
-      dni: "12345678",
-      createdAt: "2021-08-10T03:52:40.000Z",
-    }),
-  ];
+export const getTableRowsForPending = (pendingProcedures) => {
+  const rows = pendingProcedures.map((procedure) => {
+    const code = `${procedure.procedureTypeDescription
+      .toLocaleLowerCase()
+      .split(" ")
+      .join("_")}-${procedure.id}`;
+    const userCompleteName = `${procedure.userCitizenName} ${procedure.userCitizenSurname}`;
+    const formattedDate = new Date(
+      `${procedure.creationDate.split("-").join("/")}`
+    );
+    return createData({
+      idProcedure: procedure.id,
+      code,
+      type: procedure.procedureTypeDescription,
+      userName: userCompleteName,
+      dni: procedure.userCitizenDni,
+      createdAt: moment(formattedDate),
+    });
+  });
 
   return rows;
 };

@@ -83,9 +83,9 @@ export default function PendingTable({ headCells, rows }) {
     setPage(0);
   };
 
-  const handleEvaluar = (code) => {
+  const handleEvaluar = (idProcedure) => {
     // TODO asignar el caso al usuario
-    history.push(`/in-progress/${code}`);
+    history.push(`/in-progress/${idProcedure}`);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -116,6 +116,7 @@ export default function PendingTable({ headCells, rows }) {
                 .map((row, index) => {
                   return (
                     <TableRow tabIndex={-1} key={index}>
+                      <TableCell align="left">{row.idProcedure}</TableCell>
                       <TableCell align="left">{row.code}</TableCell>
                       <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">{row.userName}</TableCell>
@@ -130,7 +131,7 @@ export default function PendingTable({ headCells, rows }) {
                           //   onClick={() => console.log("ver detalle")}
                           sx={{ width: "max-content" }}
                           component={Link}
-                          to={`/detail/${row.code}`}
+                          to={`/detail/${row.idProcedure}`}
                         >
                           Ver Detalle
                         </Button>
@@ -140,7 +141,7 @@ export default function PendingTable({ headCells, rows }) {
                           color="secondary"
                           size="small"
                           variant="contained"
-                          onClick={() => handleEvaluar(row.code)}
+                          onClick={() => handleEvaluar(row.idProcedure)}
                         >
                           Evaluar
                         </Button>

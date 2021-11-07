@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useHistory } from "react-router-dom";
 import { Box, Divider, Typography, Button } from "@mui/material";
 import AcceptanceDialog from "../components/AcceptanceDialog";
 import DetailData from "../components/DetailData";
 import RejectionDialog from "../components/RejectionDialog";
 import ObservationDialog from "../components/ObservationDialog";
 import { useAuth } from "../session";
+import { useQuery } from "react-query";
+import { getProcedureDetail } from "../api/procedures";
+import Loader from "../components/Loader";
 
 const DetailPage = () => {
   let location = useLocation();
   const { currentUser } = useAuth();
-  const { code } = useParams();
-  console.log(code);
+  const { idProcedure } = useParams();
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
   const [isCloseDialogOpen, setIsCloseDialogOpen] = useState(false);
   const [isInProgress, setIsInProgress] = useState(false);
   const [isOpenObservationDialog, setIsOpenObservationDialog] = useState(false);
+  let history = useHistory();
+
+  const { isLoading: isLoadingProcedureDetail, data: procedureDetail } =
+    useQuery(["getProcedureDetial", idProcedure], () =>
+      getProcedureDetail(idProcedure)
+    );
+
+  useEffect(() => {
+    setIsInProgress(location.pathname.startsWith("/in-progress"));
+  }, [location]);
+
+  if (isLoadingProcedureDetail) return <Loader />;
+
+  console.log(procedureDetail);
 
   const observaciones = [
     {
@@ -85,10 +101,6 @@ const DetailPage = () => {
     closeDialog();
   };
 
-  useEffect(() => {
-    setIsInProgress(location.pathname.startsWith("/in-progress"));
-  }, [location]);
-
   return (
     <Box>
       <Box>
@@ -124,7 +136,11 @@ const DetailPage = () => {
         }}
       >
         <Box>
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => history.goBack()}
+          >
             Volver atras
           </Button>
         </Box>
