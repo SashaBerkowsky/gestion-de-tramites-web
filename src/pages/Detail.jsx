@@ -98,10 +98,10 @@ const DetailPage = () => {
 			<Box>
 				<Typography variant='h6' color='text.greenApp'>
 					{console.log("procedure", procedureDetail)}
-					{/*`${procedureDetail.procedureTypeDescription
+					{`${procedureDetail.procedureTypeDescription
 						.toLocaleLowerCase()
 						.split(" ")
-          .join("_")}-${procedureDetail.id}`*/}
+						.join("_")}-${procedureDetail.id}`}
 				</Typography>
 			</Box>
 			<Box sx={{ display: "flex" }}>
