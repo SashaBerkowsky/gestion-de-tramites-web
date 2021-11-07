@@ -17,8 +17,6 @@ export function AuthProvider({ children }) {
   }
 
   function login(email, password) {
-    console.log(email);
-    console.log(password);
     return auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -42,7 +40,6 @@ export function AuthProvider({ children }) {
         surname: rawUser.surname,
         idMunicipalRole: rawUser.idMunicipalRole,
       };
-      console.log(userMunicipio);
     } catch (err) {
       // Al llegar a este error firebase nunca va a autenticar al usuario
       console.log("getCurrentUser ERR", err.message);
@@ -56,7 +53,6 @@ export function AuthProvider({ children }) {
       if (!!user) {
         userMunicipal = await getCurrentUser(user);
       }
-      console.log("useEffect", userMunicipal);
       setCurrentUser(userMunicipal);
       setLoading(false);
     });

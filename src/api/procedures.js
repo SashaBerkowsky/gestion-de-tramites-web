@@ -7,3 +7,10 @@ export function getPendingProcedures() {
     return res.data;
   });
 }
+export function getProcedureDetail(idProcedure) {
+  return axios
+    .get(`${baseUrl}/api/procedures?idProcedure=${idProcedure}`)
+    .then((res) => {
+      return res.data;
+    });
+}

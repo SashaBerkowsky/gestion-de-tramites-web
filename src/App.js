@@ -68,12 +68,12 @@ export default function App() {
                   <PrivateRoute exact path="/pending" component={PendingPage} />
                   <PrivateRoute
                     exact
-                    path="/in-progress/:code"
+                    path="/in-progress/:idProcedure"
                     component={DetailPage}
                   />
                   <PrivateRoute
                     exact
-                    path="/detail/:code"
+                    path="/detail/:idProcedure"
                     component={DetailPage}
                   />
                   <PrivateRoute path="/historical" component={HistoricalPage} />

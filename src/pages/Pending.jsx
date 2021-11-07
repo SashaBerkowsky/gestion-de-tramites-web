@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { getTableRowsForPending } from "../utils/tables";
 import { Box } from "@mui/material";
 import PendingTable from "../components/PendingTable";
@@ -18,6 +18,10 @@ const PendingPage = () => {
   console.log(pendingProcedures);
 
   const headCells = [
+    {
+      id: "idProcedure",
+      label: "Id",
+    },
     {
       id: "code",
       label: "Código",
@@ -39,7 +43,7 @@ const PendingPage = () => {
       label: "Fecha de inicio",
     },
   ];
-  const rows = getTableRowsForPending();
+  const rows = getTableRowsForPending(pendingProcedures);
   return (
     <Box>
       <Box mb={3}>
