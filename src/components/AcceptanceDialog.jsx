@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -9,9 +9,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Loader from "../components/Loader";
+import { getUsersResponsible } from "../api/user";
+import { putUserResponsible } from "../api/procedures";
+import { useQuery, useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
 
-function AcceptanceDialog({ onClose, selectedValue, open }) {
+function AcceptanceDialog({ onClose, selectedValue, open, idProcedure }) {
 	const [selectedPerson, setSelectedPerson] = useState("");
+	let history = useHistory();
 
 	const handleChange = (event) => {
 		setSelectedPerson(event.target.value);
@@ -20,6 +26,25 @@ function AcceptanceDialog({ onClose, selectedValue, open }) {
 	const handleClose = () => {
 		onClose(selectedValue);
 	};
+
+	const { isLoading, data: usersResponsible } = useQuery(
+		["getUsersResponsible"],
+		() => getUsersResponsible()
+	);
+
+	const putUserMutation = useMutation(
+		(mutationData) => {
+			putUserResponsible(mutationData.idProcedure, mutationData.selectedPerson);
+		},
+		{
+			onSuccess: () => {
+				history.push(`/pending`);
+				alert("Responsable asignado correctamente!");
+			},
+		}
+	);
+
+	if (isLoading) return <Loader />;
 
 	return (
 		<Dialog onClose={handleClose} open={open}>
@@ -37,8 +62,12 @@ function AcceptanceDialog({ onClose, selectedValue, open }) {
 							onChange={handleChange}
 							label='Evaluador'
 						>
-							<MenuItem value={1}>Sergio Gómez</MenuItem>
-							<MenuItem value={2}>Catalina Perez</MenuItem>
+							{usersResponsible.map((userRes, idx) => (
+								<MenuItem
+									key={idx}
+									value={userRes.id}
+								>{`${userRes.name} ${userRes.surname}`}</MenuItem>
+							))}
 						</Select>
 					</FormControl>
 				</DialogContentText>
@@ -48,11 +77,13 @@ function AcceptanceDialog({ onClose, selectedValue, open }) {
 					Cancelar
 				</Button>
 				<Button
-					onClick={() => console.log("aprobar")}
+					onClick={() => {
+						putUserMutation.mutate({ idProcedure, selectedPerson });
+					}}
 					autoFocus
 					color='secondary'
 					variant='contained'
-					disabled={!selectedPerson}
+					disabled={!selectedPerson || putUserMutation.isLoading}
 				>
 					Aprobar
 				</Button>
