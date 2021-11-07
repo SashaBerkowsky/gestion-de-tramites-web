@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -93,6 +93,12 @@ export default function PersistentDrawerLeft({ children }) {
   const [open, setOpen] = React.useState(false);
   const { currentUser, logout } = useAuth();
   const history = useHistory();
+
+  useEffect(() => {
+    if (!!currentUser) {
+      setOpen(true);
+    }
+  }, [currentUser]);
 
   async function handleSingOut() {
     try {
