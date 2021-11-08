@@ -109,6 +109,7 @@ export default function HistoricalTable({ headCells, rows }) {
                 .map((row, index) => {
                   return (
                     <TableRow tabIndex={-1} key={index}>
+                      <TableCell align="left">{row.idProcedure}</TableCell>
                       <TableCell align="left">{row.code}</TableCell>
                       <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">{row.userName}</TableCell>
@@ -119,8 +120,8 @@ export default function HistoricalTable({ headCells, rows }) {
                       <TableCell align="left">
                         {moment(row.finishedAt).locale("es").format("L")}
                       </TableCell>
-                      <TableCell align="left">{row.analyst}</TableCell>
                       <TableCell align="left">{row.evaluator}</TableCell>
+                      <TableCell align="left">{row.evaluatorRole}</TableCell>
                       <TableCell align="left">{row.state}</TableCell>
 
                       <TableCell padding="normal" align="right">
@@ -128,7 +129,7 @@ export default function HistoricalTable({ headCells, rows }) {
                           color="secondary"
                           aria-label="Ir a detalle"
                           component={Link}
-                          to={`/detail/${row.code}`}
+                          to={`/detail/${row.idProcedure}`}
                         >
                           <Search />
                         </IconButton>
