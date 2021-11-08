@@ -199,9 +199,11 @@ export default function PersistentDrawerLeft({ children }) {
           </Typography>
 
           <MenuList>
-            <NavLink to="/pending">
-              <MenuItem>Pendientes</MenuItem>
-            </NavLink>
+            {currentUser.userRole !== "responsable" && (
+              <NavLink to="/pending">
+                <MenuItem>Pendientes</MenuItem>
+              </NavLink>
+            )}
             <NavLink to="/in-progress">
               <MenuItem>En Proceso</MenuItem>
             </NavLink>

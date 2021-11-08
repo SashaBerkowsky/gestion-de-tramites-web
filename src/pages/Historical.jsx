@@ -19,21 +19,76 @@ import {
 import Search from "@mui/icons-material/Search";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HistoricalTable from "../components/HistoricalTable";
-import RangePickerDate from "../components/RangePickerDate";
+import { getListOfHistoricalProcedures } from "../api/procedures";
+import { useQuery } from "react-query";
+import Loader from "../components/Loader";
+import { uniqBy } from "lodash";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 const HistoricalPage = () => {
-  const [selectedPerson, setSelectedPerson] = useState("");
-  const [expanded, setExpanded] = React.useState(true);
+  const [rows, setRows] = useState([]);
+  const [rowTotal, setRowTotal] = useState(0);
+  const [expanded, setExpanded] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    type: "",
+    state: "",
+    createdAt: new Date(),
+  });
+
+  const { isLoading: isLoadingProcedures, refetch } = useQuery(
+    "getListOfHistoricalProcedures",
+    getListOfHistoricalProcedures,
+    {
+      onSuccess: (historicalProcedures) => {
+        const tableRows = getTableRowsForHistorical(historicalProcedures);
+        setRows(tableRows);
+        setRowTotal(tableRows.length);
+      },
+    }
+  );
+
+  if (isLoadingProcedures) return <Loader />;
 
   const handleExpanded = () => {
     setExpanded(!expanded);
   };
 
-  const handleChange = (event) => {
-    setSelectedPerson(event.target.value);
+  const handleApplyFilters = () => {
+    console.log(filters);
+    let newRows;
+    if (filters.createdAt) {
+      const sartDate = new Date(filters.createdAt).getTime();
+
+      newRows = rows.filter((d) => {
+        var createdAt = new Date(d.createdAt).getTime();
+        return createdAt > sartDate;
+      });
+    }
+
+    if (filters.type) {
+      newRows = newRows.filter((d) => {
+        return d.type === filters.type;
+      });
+    }
+    if (filters.state) {
+      newRows = newRows.filter((d) => {
+        return d.state === filters.state;
+      });
+    }
+    setRows(newRows);
+    console.log(newRows);
   };
 
+  console.log(rows);
+
   const headCells = [
+    {
+      id: "idProcedure",
+      label: "Id",
+    },
     {
       id: "code",
       label: "Código",
@@ -59,12 +114,12 @@ const HistoricalPage = () => {
       label: "Finalización",
     },
     {
-      id: "analyst",
-      label: "Analista",
+      id: "evaluator",
+      label: "Evaluador",
     },
     {
-      id: "evaluator",
-      label: "Responsable",
+      id: "evaluatorRole",
+      label: "Rol Evaluador",
     },
     {
       id: "state",
@@ -72,7 +127,6 @@ const HistoricalPage = () => {
     },
   ];
 
-  const rows = getTableRowsForHistorical();
   return (
     <Box>
       <Grid
@@ -83,7 +137,7 @@ const HistoricalPage = () => {
         mb={3}
       >
         <Grid item md={4}>
-          <CounterCard title="Historicos totales" counter="1005" fullSize />
+          <CounterCard title="Historicos totales" counter={rowTotal} fullSize />
         </Grid>
         <Grid item md={4}></Grid>
         <Grid item md={4}>
@@ -91,8 +145,9 @@ const HistoricalPage = () => {
             fullWidth
             label="Buscar"
             id="outlined-size-small"
-            placeholder="Codigo / Usuario / DNI / Analista / Evaluador"
+            placeholder="Codigo / Usuario / DNI / Evaluador"
             size="small"
+            onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -121,11 +176,17 @@ const HistoricalPage = () => {
                 <Select
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
-                  value={selectedPerson}
-                  onChange={handleChange}
+                  value={filters.type}
+                  onChange={(e) =>
+                    setFilters({ ...filters, type: e.target.value })
+                  }
                   label="Tipo de trámite"
                 >
-                  <MenuItem value={0}>Licencia de conducir</MenuItem>
+                  {uniqBy(rows, "type").map((r) => (
+                    <MenuItem value={r.type} key={r.type}>
+                      {r.type}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -137,29 +198,70 @@ const HistoricalPage = () => {
                 <Select
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
-                  value={selectedPerson}
-                  onChange={handleChange}
+                  value={filters.state}
+                  onChange={(e) =>
+                    setFilters({ ...filters, state: e.target.value })
+                  }
                   label="Estado del trámite"
                 >
-                  <MenuItem value={0}>Aprobado</MenuItem>
-                  <MenuItem value={1}>Rechazado</MenuItem>
-                  <MenuItem value={1}>Cerrado</MenuItem>
+                  {uniqBy(rows, "state").map((r) => (
+                    <MenuItem value={r.state} key={r.state}>
+                      {r.state}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
-              <RangePickerDate />
+            <Grid item xs={3}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DesktopDatePicker
+                  label="Fecha de inicio"
+                  inputFormat="MM/dd/yyyy"
+                  value={filters.createdAt}
+                  onChange={(newValue) =>
+                    setFilters({ ...filters, createdAt: newValue })
+                  }
+                  renderInput={(params) => (
+                    <TextField size="small" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={2}>
-              <Button variant="contained" color="secondary" fullWidth>
-                APLICAR FILTROS
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={handleApplyFilters}
+              >
+                APLICAR
+              </Button>
+            </Grid>
+            <Grid item xs={1}>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={() => refetch()}
+              >
+                RESET
               </Button>
             </Grid>
           </Grid>
         </AccordionDetails>
       </Accordion>
       <Box mt={3}>
-        <HistoricalTable headCells={headCells} rows={rows} />;
+        <HistoricalTable
+          headCells={headCells}
+          rows={rows.filter(
+            (procedure) =>
+              procedure.code.toLowerCase().includes(searchQuery) ||
+              procedure.userName.toLowerCase().includes(searchQuery) ||
+              procedure.evaluator.toLowerCase().includes(searchQuery) ||
+              procedure.dni.toLowerCase().includes(searchQuery)
+          )}
+        />
+        ;
       </Box>
     </Box>
   );
