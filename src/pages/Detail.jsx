@@ -9,9 +9,13 @@ import { useAuth } from "../session";
 import { useQuery } from "react-query";
 import { getProcedureDetail } from "../api/procedures";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
+import PopUpMsg from "../components/PopUpMsg";
 
 const DetailPage = () => {
 	let location = useLocation();
+	const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false);
+	const [successMsg, setSuccessMsg] = useState("");
 	const { currentUser } = useAuth();
 	const { idProcedure } = useParams();
 	const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
@@ -21,16 +25,23 @@ const DetailPage = () => {
 	const [isOpenObservationDialog, setIsOpenObservationDialog] = useState(false);
 	let history = useHistory();
 	console.log(idProcedure);
-	const { isLoading: isLoadingProcedureDetail, data: procedureDetail } =
-		useQuery(["getProcedureDetial", idProcedure], () =>
-			getProcedureDetail(idProcedure)
-		);
+	const {
+		isLoading: isLoadingProcedureDetail,
+		data: procedureDetail,
+		isError,
+		error,
+	} = useQuery(["getProcedureDetial", idProcedure], () =>
+		getProcedureDetail(idProcedure)
+	);
 
 	useEffect(() => {
 		setIsInProgress(location.pathname.startsWith("/in-progress"));
 	}, [location]);
 
 	if (isLoadingProcedureDetail) return <Loader />;
+	console.log(error);
+
+	if (isError) return <ErrorAlert message={error.message} />;
 
 	const observaciones = [
 		{
@@ -67,8 +78,14 @@ const DetailPage = () => {
 	const handleClickOpen = () => {
 		setOpenAcceptanceModal(true);
 	};
-	const handleClose = () => {
+	const handleClose = (showSuccessAlert, successMsg) => {
 		setOpenAcceptanceModal(false);
+		setIsSuccessAlertOpen(showSuccessAlert);
+		setSuccessMsg(successMsg);
+	};
+
+	const handleSuccess = () => {
+		setIsSuccessAlertOpen(true);
 	};
 
 	// GET detalle con el codigo de tramite
@@ -76,16 +93,20 @@ const DetailPage = () => {
 		setIsRejectDialogOpen(true);
 	};
 
-	const closeRejectDialog = () => {
+	const closeRejectDialog = (showSuccessAlert, successMsg) => {
 		setIsRejectDialogOpen(false);
+		setIsSuccessAlertOpen(showSuccessAlert);
+		setSuccessMsg(successMsg);
 	};
 
 	const openCloseDialog = () => {
 		setIsCloseDialogOpen(true);
 	};
 
-	const closeDialog = () => {
+	const closeDialog = (showSuccessAlert, successMsg) => {
 		setIsCloseDialogOpen(false);
+		setIsSuccessAlertOpen(showSuccessAlert);
+		setSuccessMsg(successMsg);
 	};
 
 	const rejectPaperwork = (message) => {
@@ -177,6 +198,7 @@ const DetailPage = () => {
 			<AcceptanceDialog
 				open={acceptanceModalOpen}
 				onClose={handleClose}
+				handleSuccess={handleSuccess}
 				idProcedure={procedureDetail.id}
 			/>
 			<RejectionDialog
@@ -201,6 +223,12 @@ const DetailPage = () => {
 				isopen={isOpenObservationDialog}
 				closeDialog={handleCloseObservationDialog}
 				observations={observaciones}
+			/>
+			<PopUpMsg
+				variety='success'
+				isOpen={isSuccessAlertOpen}
+				to='/pending'
+				message={successMsg}
 			/>
 		</Box>
 	);

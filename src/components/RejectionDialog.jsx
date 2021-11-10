@@ -22,21 +22,14 @@ export default function RejectionDialog({
 	const [textReject, setTextReject] = useState("");
 	let history = useHistory();
 
-	const putRejectionMutation = useMutation(
-		(mutationData) => {
-			console.log(mutationData.idProcedure);
-			finishProcedure(mutationData.idProcedure, true, mutationData.textReject);
-		},
-		{
-			onSuccess: () => {
-				history.push(`/pending`);
-				alert("Tramite rechazado correctamente");
-			},
-		}
-	);
+	const putRejectionMutation = useMutation((mutationData) => {
+		console.log(mutationData.idProcedure);
+		finishProcedure(mutationData.idProcedure, true, mutationData.textReject);
+	});
 
-	const handleRejectPaperwork = () => {
-		putRejectionMutation.mutate({ idProcedure, textReject });
+	const handleRejectPaperwork = async () => {
+		await putRejectionMutation.mutateAsync({ idProcedure, textReject });
+		closeRejectDialog(true, "Razon de finalización asignada correctamente!");
 		setTextReject("");
 	};
 

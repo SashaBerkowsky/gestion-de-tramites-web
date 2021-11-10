@@ -20,6 +20,7 @@ import { useQuery } from "react-query";
 import { getProcedureDetail } from "../api/procedures";
 import { formatProcedureType } from "../utils/procedureType";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
 
 const amountOfColumns = 2;
 
@@ -52,10 +53,12 @@ const DetailData = () => {
   const { currentUser } = useAuth();
   const { idProcedure } = useParams();
 
-  const { isLoading, data: selectedProcedure } = useQuery(
-    ["getProcedureDetail"],
-    () => getProcedureDetail(idProcedure)
-  );
+  const {
+    isLoading,
+    data: selectedProcedure,
+    isError,
+    error,
+  } = useQuery(["getProcedureDetail"], () => getProcedureDetail(idProcedure));
 
   const isStepperActive =
     currentUser.userRole === "responsable" &&
@@ -85,6 +88,8 @@ const DetailData = () => {
   }
 
   if (isLoading) return <Loader />;
+
+  if (isError) return <ErrorAlert message={error.message} />;
 
   return (
     <Box
@@ -147,21 +152,6 @@ const DetailData = () => {
             >
               <img src={selectedProcedure.selfieUrl} alt="Selfie" />
               <ImageListItemBar sx={{ textAlign: "center" }} title="Selfie" />
-            </ImageListItem>
-
-            <ImageListItem
-              onClick={() =>
-                handleImageClick({
-                  src: selectedProcedure.selfieDniUrl,
-                  desc: "Selfie c/Dni",
-                })
-              }
-            >
-              <img src={selectedProcedure.selfieDniUrl} alt="Selfie c/Dni" />
-              <ImageListItemBar
-                sx={{ textAlign: "center" }}
-                title="Selfie c/Dni"
-              />
             </ImageListItem>
 
             <ImageListItem
