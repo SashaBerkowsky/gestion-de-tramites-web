@@ -6,6 +6,7 @@ import CounterCard from "../components/CounterCard";
 import { useQuery } from "react-query";
 import { getPendingProcedures } from "../api/procedures";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
 import { useAuth } from "../session";
 import { useHistory } from "react-router";
 
@@ -14,16 +15,19 @@ const PendingPage = () => {
   let history = useHistory();
   useEffect(() => {
     if (currentUser.userRole === "responsable") {
-      history.push("/");
+      history.push("/in-progress");
     }
   }, [currentUser]);
 
-  const { isLoading: isLoadingProcedures, data: pendingProcedures } = useQuery(
-    "getPendingProcedures",
-    getPendingProcedures
-  );
+  const {
+    isLoading: isLoadingProcedures,
+    data: pendingProcedures,
+    isError,
+    error,
+  } = useQuery("getPendingProcedures", getPendingProcedures);
 
   if (isLoadingProcedures) return <Loader />;
+  if (isError) return <ErrorAlert message={error.message} />;
 
   const headCells = [
     {

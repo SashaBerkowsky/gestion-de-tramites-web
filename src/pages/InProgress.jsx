@@ -14,6 +14,7 @@ import { useAuth } from "../session";
 import { getProceduresInProgress } from "../api/procedures";
 import { useQuery } from "react-query";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
 import { uniqBy } from "lodash";
 
 const InProgressPage = () => {
@@ -24,19 +25,24 @@ const InProgressPage = () => {
   const handleChange = (event) => {
     setSelectedPerson(event.target.value);
   };
-
-  const { isLoading: isLoadingProcedures, data: inProgressProcedures } =
-    useQuery(["getProceduresInProgress"], () =>
-      getProceduresInProgress(currentUser.userRole)
-    );
+  const {
+    isLoading: isLoadingProcedures,
+    data: inProgressProcedures,
+    isError: isErrorProcedure,
+    error: errorProcedure,
+  } = useQuery(["getProceduresInProgress"], () =>
+    getProceduresInProgress(currentUser.userRole)
+  );
 
   useEffect(() => {
     if (currentUser) {
       setSelectedPerson(currentUser.completeName);
     }
   }, [currentUser]);
-
   if (isLoadingProcedures) return <Loader />;
+
+  if (isErrorProcedure) return <ErrorAlert message={errorProcedure.message} />;
+
   const headCells = [
     {
       id: "idProcedure",

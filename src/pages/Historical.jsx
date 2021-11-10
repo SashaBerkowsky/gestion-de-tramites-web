@@ -22,6 +22,7 @@ import HistoricalTable from "../components/HistoricalTable";
 import { getListOfHistoricalProcedures } from "../api/procedures";
 import { useQuery } from "react-query";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
 import { uniqBy } from "lodash";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -38,20 +39,25 @@ const HistoricalPage = () => {
     createdAt: new Date(),
   });
 
-  const { isFetching: isLoadingProcedures, refetch } = useQuery(
-    "getListOfHistoricalProcedures",
-    getListOfHistoricalProcedures,
-    {
-      onSuccess: (historicalProcedures) => {
-        const tableRows = getTableRowsForHistorical(historicalProcedures);
-        setRows(tableRows);
-        setRowTotal(tableRows.length);
-      },
-      refetchIntervalInBackground: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const {
+    isFetching: isLoadingProcedures,
+    refetch,
+    isError,
+    error,
+  } = useQuery("getListOfHistoricalProcedures", getListOfHistoricalProcedures, {
+    onSuccess: (historicalProcedures) => {
+      const tableRows = getTableRowsForHistorical(historicalProcedures);
+      setRows(tableRows);
+      setRowTotal(tableRows.length);
+    },
+    refetchIntervalInBackground: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoadingProcedures) return <Loader />;
+
+  if (isError) return <ErrorAlert message={error.message} />;
 
   const handleExpanded = () => {
     setExpanded(!expanded);
@@ -80,6 +86,7 @@ const HistoricalPage = () => {
       });
     }
     setRows(newRows);
+    console.log(newRows);
   };
 
   console.log(rows);
@@ -251,20 +258,16 @@ const HistoricalPage = () => {
         </AccordionDetails>
       </Accordion>
       <Box mt={3}>
-        {isLoadingProcedures ? (
-          <Loader />
-        ) : (
-          <HistoricalTable
-            headCells={headCells}
-            rows={rows.filter(
-              (procedure) =>
-                procedure.code.toLowerCase().includes(searchQuery) ||
-                procedure.userName.toLowerCase().includes(searchQuery) ||
-                procedure.evaluator.toLowerCase().includes(searchQuery) ||
-                procedure.dni.toLowerCase().includes(searchQuery)
-            )}
-          />
-        )}
+        <HistoricalTable
+          headCells={headCells}
+          rows={rows.filter(
+            (procedure) =>
+              procedure.code.toLowerCase().includes(searchQuery) ||
+              procedure.userName.toLowerCase().includes(searchQuery) ||
+              procedure.evaluator.toLowerCase().includes(searchQuery) ||
+              procedure.dni.toLowerCase().includes(searchQuery)
+          )}
+        />
       </Box>
     </Box>
   );
