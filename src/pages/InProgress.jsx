@@ -97,35 +97,41 @@ const InProgressPage = () => {
         </Grid>
         <Grid item xs={2} sm={4} md={4}></Grid>
         <Grid item xs={2} sm={4} md={4}>
-          <FormControl variant="standard" sx={{ m: 1, width: "98%" }}>
-            <InputLabel
-              id="demo-simple-select-standard-label"
-              sx={{ textTransform: "capitalize" }}
-            >
-              {sessionData}
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-standard-label"
-              id="demo-simple-select-standard"
-              value={selectedPerson}
-              onChange={handleChange}
-              label="Evaluador"
-            >
-              {designatedList.map((r) => (
-                <MenuItem value={r.designatedTo} key={r.designatedTo}>
-                  {r.designatedTo}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {rows.length > 0 && (
+            <FormControl variant="standard" sx={{ m: 1, width: "98%" }}>
+              <InputLabel
+                id="demo-simple-select-standard-label"
+                sx={{ textTransform: "capitalize" }}
+              >
+                {sessionData}
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={selectedPerson}
+                onChange={handleChange}
+                label="Evaluador"
+              >
+                {designatedList.map((r) => (
+                  <MenuItem value={r.designatedTo} key={r.designatedTo}>
+                    {r.designatedTo}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
         </Grid>
       </Grid>
-      <InProgressTable
-        headCells={headCells}
-        rows={rows.filter(
-          (procedure) => procedure.designatedTo === selectedPerson
-        )}
-      />
+      {rows.length > 0 ? (
+        <InProgressTable
+          headCells={headCells}
+          rows={rows.filter(
+            (procedure) => procedure.designatedTo === selectedPerson
+          )}
+        />
+      ) : (
+        <Box>No se encontraron trámites en proceso</Box>
+      )}
     </Box>
   );
 };

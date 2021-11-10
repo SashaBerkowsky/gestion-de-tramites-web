@@ -17,6 +17,7 @@ const PendingPage = () => {
     if (currentUser.userRole === "responsable") {
       history.push("/in-progress");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const {
@@ -66,7 +67,11 @@ const PendingPage = () => {
           counter={pendingProcedures.length}
         />
       </Box>
-      <PendingTable headCells={headCells} rows={rows} />
+      {rows.length > 0 ? (
+        <PendingTable headCells={headCells} rows={rows} />
+      ) : (
+        <Box>No se encontraron trámites pendientes</Box>
+      )}
     </Box>
   );
 };

@@ -28,7 +28,6 @@ export function putUserResponsible(idProcedure, idUserResponsible) {
 }
 
 export function putUserAnalyst(idProcedure, idUserAnalyst) {
-  console.log(idUserAnalyst);
   return axios
     .put(`${baseUrl}/api/procedures/setUserAnalist`, {
       idProcedure: Number(idProcedure),

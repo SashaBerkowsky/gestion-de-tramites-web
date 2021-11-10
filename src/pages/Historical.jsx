@@ -64,7 +64,6 @@ const HistoricalPage = () => {
   };
 
   const handleApplyFilters = () => {
-    console.log(filters);
     let newRows;
     if (filters.createdAt) {
       const sartDate = new Date(filters.createdAt).getTime();
@@ -86,10 +85,7 @@ const HistoricalPage = () => {
       });
     }
     setRows(newRows);
-    console.log(newRows);
   };
-
-  console.log(rows);
 
   const headCells = [
     {
@@ -258,16 +254,20 @@ const HistoricalPage = () => {
         </AccordionDetails>
       </Accordion>
       <Box mt={3}>
-        <HistoricalTable
-          headCells={headCells}
-          rows={rows.filter(
-            (procedure) =>
-              procedure.code.toLowerCase().includes(searchQuery) ||
-              procedure.userName.toLowerCase().includes(searchQuery) ||
-              procedure.evaluator.toLowerCase().includes(searchQuery) ||
-              procedure.dni.toLowerCase().includes(searchQuery)
-          )}
-        />
+        {rows.length > 0 ? (
+          <HistoricalTable
+            headCells={headCells}
+            rows={rows.filter(
+              (procedure) =>
+                procedure.code.toLowerCase().includes(searchQuery) ||
+                procedure.userName.toLowerCase().includes(searchQuery) ||
+                procedure.evaluator.toLowerCase().includes(searchQuery) ||
+                procedure.dni.toLowerCase().includes(searchQuery)
+            )}
+          />
+        ) : (
+          <Box>No se encontraron trámites en el historial</Box>
+        )}
       </Box>
     </Box>
   );

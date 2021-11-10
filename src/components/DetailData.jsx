@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import DetailStepper from "../components/DetailStepper";
-import imagePlaceholder from "../assets/images/ejemplo imagen.png";
+// import imagePlaceholder from "../assets/images/ejemplo imagen.png";
 import { useAuth } from "../session";
 import { useQuery } from "react-query";
 import { getProcedureDetail } from "../api/procedures";
@@ -24,23 +24,23 @@ import ErrorAlert from "../components/ErrorAlert";
 
 const amountOfColumns = 2;
 
-const paperworkExample = {
-  id: 0,
-  formType: "Primera licencia",
-  idCard: 12345678,
-  name: "Nombre",
-  surname: "Apellido",
-  address: "Domicilio",
-  birthdate: "01/01/1990",
-  licenceType: "B1",
-  images: [
-    { src: imagePlaceholder, desc: "Persona" },
-    { src: imagePlaceholder, desc: "Persona con DNI" },
-    { src: imagePlaceholder, desc: "Frente del DNI" },
-    { src: imagePlaceholder, desc: "Dorso del DNI" },
-    { src: imagePlaceholder, desc: "Libre deuda de multas" },
-  ],
-};
+// const paperworkExample = {
+//   id: 0,
+//   formType: "Primera licencia",
+//   idCard: 12345678,
+//   name: "Nombre",
+//   surname: "Apellido",
+//   address: "Domicilio",
+//   birthdate: "01/01/1990",
+//   licenceType: "B1",
+//   images: [
+//     { src: imagePlaceholder, desc: "Persona" },
+//     { src: imagePlaceholder, desc: "Persona con DNI" },
+//     { src: imagePlaceholder, desc: "Frente del DNI" },
+//     { src: imagePlaceholder, desc: "Dorso del DNI" },
+//     { src: imagePlaceholder, desc: "Libre deuda de multas" },
+//   ],
+// };
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

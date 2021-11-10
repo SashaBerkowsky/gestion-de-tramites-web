@@ -13,225 +13,222 @@ import ErrorAlert from "../components/ErrorAlert";
 import PopUpMsg from "../components/PopUpMsg";
 
 const DetailPage = () => {
-	let location = useLocation();
-	const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false);
-	const [successMsg, setSuccessMsg] = useState("");
-	const { currentUser } = useAuth();
-	const { idProcedure } = useParams();
-	const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
-	const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
-	const [isCloseDialogOpen, setIsCloseDialogOpen] = useState(false);
-	const [isInProgress, setIsInProgress] = useState(false);
-	const [isOpenObservationDialog, setIsOpenObservationDialog] = useState(false);
-	let history = useHistory();
-	console.log(idProcedure);
-	const {
-		isLoading: isLoadingProcedureDetail,
-		data: procedureDetail,
-		isError,
-		error,
-	} = useQuery(["getProcedureDetial", idProcedure], () =>
-		getProcedureDetail(idProcedure)
-	);
+  let location = useLocation();
+  const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const { currentUser } = useAuth();
+  const { idProcedure } = useParams();
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [acceptanceModalOpen, setOpenAcceptanceModal] = useState(false);
+  const [isCloseDialogOpen, setIsCloseDialogOpen] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
+  const [isOpenObservationDialog, setIsOpenObservationDialog] = useState(false);
+  const [observations, setObservations] = useState([]);
+  let history = useHistory();
 
-	useEffect(() => {
-		setIsInProgress(location.pathname.startsWith("/in-progress"));
-	}, [location]);
+  const {
+    isLoading: isLoadingProcedureDetail,
+    data: procedureDetail,
+    isError,
+    error,
+  } = useQuery(["getProcedureDetial", idProcedure], () =>
+    getProcedureDetail(idProcedure)
+  );
 
-	if (isLoadingProcedureDetail) return <Loader />;
-	console.log(error);
+  useEffect(() => {
+    setIsInProgress(location.pathname.startsWith("/in-progress"));
+  }, [location]);
 
-	if (isError) return <ErrorAlert message={error.message} />;
+  useEffect(() => {
+    console.log(procedureDetail);
+  }, [procedureDetail]);
 
-	const observaciones = [
-		{
-			date: "01/01/2021 08:30hs",
-			state: "En proceso de análisis",
-			prof: "Ana Palermo",
-		},
-		{
-			date: "02/01/2021 15:00hs",
-			state: "Análisis aprobado",
-			prof: "Ana Palermo",
-		},
-		{
-			date: "04/01/2021 11:20hs",
-			state: "Asignación turno trámite personal",
-			prof: "Sergio Gomez",
-			turn: "05/01/2021 10:00hs",
-		},
-		{
-			date: "04/01/2021 13:14hs",
-			state: "Caso cerrado",
-			prof: "Sergio Gomez",
-			note: " Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-		},
-	];
+  if (isLoadingProcedureDetail) return <Loader />;
 
-	const handleOpenObservationDialog = () => {
-		setIsOpenObservationDialog(true);
-	};
-	const handleCloseObservationDialog = () => {
-		setIsOpenObservationDialog(false);
-	};
+  if (isError) return <ErrorAlert message={error.message} />;
 
-	const handleClickOpen = () => {
-		setOpenAcceptanceModal(true);
-	};
-	const handleClose = (showSuccessAlert, successMsg) => {
-		setOpenAcceptanceModal(false);
-		setIsSuccessAlertOpen(showSuccessAlert);
-		setSuccessMsg(successMsg);
-	};
+  const observaciones = [
+    {
+      date: "01/01/2021 08:30hs",
+      state: "En proceso de análisis",
+      prof: "Ana Palermo",
+    },
+    {
+      date: "02/01/2021 15:00hs",
+      state: "Análisis aprobado",
+      prof: "Ana Palermo",
+    },
+    {
+      date: "04/01/2021 11:20hs",
+      state: "Asignación turno trámite personal",
+      prof: "Sergio Gomez",
+      turn: "05/01/2021 10:00hs",
+    },
+    {
+      date: "04/01/2021 13:14hs",
+      state: "Caso cerrado",
+      prof: "Sergio Gomez",
+      note: " Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+  ];
 
-	const handleSuccess = () => {
-		setIsSuccessAlertOpen(true);
-	};
+  const handleOpenObservationDialog = () => {
+    setIsOpenObservationDialog(true);
+  };
+  const handleCloseObservationDialog = () => {
+    setIsOpenObservationDialog(false);
+  };
 
-	// GET detalle con el codigo de tramite
-	const openRejectDialog = () => {
-		setIsRejectDialogOpen(true);
-	};
+  const handleClickOpen = () => {
+    setOpenAcceptanceModal(true);
+  };
+  const handleClose = (showSuccessAlert, successMsg) => {
+    setOpenAcceptanceModal(false);
+    setIsSuccessAlertOpen(showSuccessAlert);
+    setSuccessMsg(successMsg);
+  };
 
-	const closeRejectDialog = (showSuccessAlert, successMsg) => {
-		setIsRejectDialogOpen(false);
-		setIsSuccessAlertOpen(showSuccessAlert);
-		setSuccessMsg(successMsg);
-	};
+  const handleSuccess = () => {
+    setIsSuccessAlertOpen(true);
+  };
 
-	const openCloseDialog = () => {
-		setIsCloseDialogOpen(true);
-	};
+  // GET detalle con el codigo de tramite
+  const openRejectDialog = () => {
+    setIsRejectDialogOpen(true);
+  };
 
-	const closeDialog = (showSuccessAlert, successMsg) => {
-		setIsCloseDialogOpen(false);
-		setIsSuccessAlertOpen(showSuccessAlert);
-		setSuccessMsg(successMsg);
-	};
+  const closeRejectDialog = (showSuccessAlert, successMsg) => {
+    setIsRejectDialogOpen(false);
+    setIsSuccessAlertOpen(showSuccessAlert);
+    setSuccessMsg(successMsg);
+  };
 
-	const rejectPaperwork = (message) => {
-		// TODO mandar el mensaje rechazo
-		closeRejectDialog();
-	};
+  const openCloseDialog = () => {
+    setIsCloseDialogOpen(true);
+  };
 
-	return (
-		<Box>
-			<Box>
-				<Typography variant='h6' color='text.greenApp'>
-					{console.log("procedure", procedureDetail)}
-					{`${procedureDetail.procedureTypeDescription
-						.toLocaleLowerCase()
-						.split(" ")
-						.join("_")}-${procedureDetail.id}`}
-				</Typography>
-			</Box>
-			<Box sx={{ display: "flex" }}>
-				<Box as='p' color='text.primary' mr={2}>
-					<Box as='span' sx={{ fontWeight: "bold" }}>
-						Fecha inicio:
-					</Box>
-					01/01/2021
-				</Box>
-			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "center",
-				}}
-			>
-				<Box>
-					<Button
-						variant='contained'
-						color='secondary'
-						onClick={() => history.goBack()}
-					>
-						Volver atras
-					</Button>
-				</Box>
-				<Box>
-					{isInProgress && (
-						<>
-							{currentUser.userRole === "analista" && (
-								<Button
-									variant='contained'
-									color='primary'
-									sx={{ marginRight: "5px" }}
-									onClick={handleClickOpen}
-								>
-									Aprobar
-								</Button>
-							)}
-							{currentUser.userRole === "responsable" && (
-								<Button
-									variant='contained'
-									color='error'
-									sx={{ marginRight: "5px" }}
-									onClick={openCloseDialog}
-								>
-									Cerrar tramite
-								</Button>
-							)}
-						</>
-					)}
-					{isInProgress && currentUser.userRole === "analista" && (
-						<Button
-							onClick={openRejectDialog}
-							variant='contained'
-							color='error'
-							sx={{ marginRight: "5px" }}
-						>
-							Rechazar
-						</Button>
-					)}
-					<Button
-						onClick={handleOpenObservationDialog}
-						variant='contained'
-						color='info'
-					>
-						Ver historial del trámite
-					</Button>
-				</Box>
-			</Box>
-			<Divider sx={{ marginTop: "10px" }} />
-			<DetailData />
-			<AcceptanceDialog
-				open={acceptanceModalOpen}
-				onClose={handleClose}
-				handleSuccess={handleSuccess}
-				idProcedure={procedureDetail.id}
-			/>
-			<RejectionDialog
-				idProcedure={procedureDetail.id}
-				closeRejectDialog={closeRejectDialog}
-				rejectPaperwork={rejectPaperwork}
-				isRejectDialogOpen={isRejectDialogOpen}
-				textMessageDialog='Indique los motivos por los cuales el tramite ha sido rechazado'
-				textButton='Rechazar'
-				reason='Razón de rechazo'
-			/>
-			<RejectionDialog
-				idProcedure={procedureDetail.id}
-				closeRejectDialog={closeDialog}
-				isRejectDialogOpen={isCloseDialogOpen}
-				textMessageDialog='Indique los motivos por los cuales desea cerrar el trámite'
-				textButton='Cerrar'
-				reason='Razón del Cierre'
-			/>
+  const closeDialog = (showSuccessAlert, successMsg) => {
+    setIsCloseDialogOpen(false);
+    setIsSuccessAlertOpen(showSuccessAlert);
+    setSuccessMsg(successMsg);
+  };
 
-			<ObservationDialog
-				isopen={isOpenObservationDialog}
-				closeDialog={handleCloseObservationDialog}
-				observations={observaciones}
-			/>
-			<PopUpMsg
-				variety='success'
-				isOpen={isSuccessAlertOpen}
-				to='/pending'
-				message={successMsg}
-			/>
-		</Box>
-	);
+  return (
+    <Box>
+      <Box>
+        <Typography variant="h6" color="text.greenApp">
+          {`${procedureDetail.procedureTypeDescription
+            .toLocaleLowerCase()
+            .split(" ")
+            .join("_")}-${procedureDetail.id}`}
+        </Typography>
+      </Box>
+      <Box sx={{ display: "flex" }}>
+        <Box as="p" color="text.primary" mr={2}>
+          <Box as="span" sx={{ fontWeight: "bold" }}>
+            Fecha inicio:
+          </Box>
+          01/01/2021
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => history.goBack()}
+          >
+            Volver atras
+          </Button>
+        </Box>
+        <Box>
+          {isInProgress && (
+            <>
+              {currentUser.userRole === "analista" && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ marginRight: "5px" }}
+                  onClick={handleClickOpen}
+                >
+                  Aprobar
+                </Button>
+              )}
+              {currentUser.userRole === "responsable" && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ marginRight: "5px" }}
+                  onClick={openCloseDialog}
+                >
+                  Cerrar tramite
+                </Button>
+              )}
+            </>
+          )}
+          {isInProgress && currentUser.userRole === "analista" && (
+            <Button
+              onClick={openRejectDialog}
+              variant="contained"
+              color="error"
+              sx={{ marginRight: "5px" }}
+            >
+              Rechazar
+            </Button>
+          )}
+          <Button
+            onClick={handleOpenObservationDialog}
+            variant="contained"
+            color="info"
+          >
+            Ver historial del trámite
+          </Button>
+        </Box>
+      </Box>
+      <Divider sx={{ marginTop: "10px" }} />
+      <DetailData />
+      <AcceptanceDialog
+        open={acceptanceModalOpen}
+        onClose={handleClose}
+        handleSuccess={handleSuccess}
+        idProcedure={procedureDetail.id}
+      />
+      <RejectionDialog
+        idProcedure={procedureDetail.id}
+        closeRejectDialog={closeRejectDialog}
+        isRejectDialogOpen={isRejectDialogOpen}
+        textMessageDialog="Indique los motivos por los cuales el tramite ha sido rechazado"
+        textButton="Rechazar"
+        reason="Razón de rechazo"
+      />
+      <RejectionDialog
+        idProcedure={procedureDetail.id}
+        closeRejectDialog={closeDialog}
+        isRejectDialogOpen={isCloseDialogOpen}
+        textMessageDialog="Indique los motivos por los cuales desea cerrar el trámite"
+        textButton="Cerrar"
+        reason="Razón del Cierre"
+      />
+
+      <ObservationDialog
+        isopen={isOpenObservationDialog}
+        closeDialog={handleCloseObservationDialog}
+        observations={observaciones}
+      />
+      <PopUpMsg
+        variety="success"
+        isOpen={isSuccessAlertOpen}
+        to="/pending"
+        message={successMsg}
+      />
+    </Box>
+  );
 };
 
 export default DetailPage;
