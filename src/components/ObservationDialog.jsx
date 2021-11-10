@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,6 +14,7 @@ import ErrorAlert from "./ErrorAlert";
 
 export default function AlertDialog({ isopen, closeDialog }) {
 	const { idProcedure } = useParams();
+	const [sortedObservations, setSortedObservations] = useState([]);
 
 	const {
 		isLoading,
@@ -23,6 +24,25 @@ export default function AlertDialog({ isopen, closeDialog }) {
 	} = useQuery(["getProcedureObservations"], () =>
 		getProcedureObservations(idProcedure)
 	);
+
+	useEffect(() => {
+		if (observations) {
+			setSortedObservations(
+				observations.sort(function (a, b) {
+					const dateA = Number(moment(a.eventDate).format("yyyyMMDD"));
+					const dateB = Number(moment(b.eventDate).format("yyyyMMDD"));
+					if (dateA > dateB) {
+						return 1;
+					}
+					if (dateA < dateB) {
+						return -1;
+					}
+					// a must be equal to b
+					return 0;
+				})
+			);
+		}
+	}, [observations]);
 
 	if (isLoading) return <Loader />;
 
@@ -56,8 +76,9 @@ export default function AlertDialog({ isopen, closeDialog }) {
 				<DialogContent>
 					<DialogContentText id='alert-dialog-description'>
 						<ul>
-							{observations.map((obs, i) => (
+							{sortedObservations.map((obs, i) => (
 								<li style={{ marginBottom: 30 }} key={i}>
+									{console.log(moment(obs.eventDate).format("MM/DD/yyyy"))}
 									{moment(obs.eventDate).format("DD/MM/yyyy")}
 									{" - " + obs.observation}
 								</li>
