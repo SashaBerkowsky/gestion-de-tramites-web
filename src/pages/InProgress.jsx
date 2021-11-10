@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getTableRowsForInProgress } from "../utils/tables";
 import InProgressTable from "../components/InProgressTable";
 import CounterCard from "../components/CounterCard";
@@ -11,13 +11,10 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useAuth } from "../session";
-import {
-  getProcedureInProgressForAnalyst,
-  getProcedureInProgressForResponsable,
-  getProceduresInProgress,
-} from "../api/procedures";
+import { getProceduresInProgress } from "../api/procedures";
 import { useQuery } from "react-query";
 import Loader from "../components/Loader";
+import { uniqBy } from "lodash";
 
 const InProgressPage = () => {
   const { currentUser } = useAuth();
@@ -30,8 +27,14 @@ const InProgressPage = () => {
 
   const { isLoading: isLoadingProcedures, data: inProgressProcedures } =
     useQuery(["getProceduresInProgress"], () =>
-      getProceduresInProgress(currentUser.userId)
+      getProceduresInProgress(currentUser.userRole)
     );
+
+  useEffect(() => {
+    if (currentUser) {
+      setSelectedPerson(currentUser.completeName);
+    }
+  }, [currentUser]);
 
   if (isLoadingProcedures) return <Loader />;
   const headCells = [
@@ -64,7 +67,11 @@ const InProgressPage = () => {
       label: sessionData,
     },
   ];
-  const rows = getTableRowsForInProgress(inProgressProcedures);
+  const rows = inProgressProcedures
+    ? getTableRowsForInProgress(inProgressProcedures)
+    : [];
+
+  const designatedList = uniqBy(rows, "designatedTo");
   return (
     <Box>
       <Grid
@@ -98,13 +105,21 @@ const InProgressPage = () => {
               onChange={handleChange}
               label="Evaluador"
             >
-              <MenuItem value={0}>Ana Palermo</MenuItem>
-              <MenuItem value={1}>Fernando Belle</MenuItem>
+              {designatedList.map((r) => (
+                <MenuItem value={r.designatedTo} key={r.designatedTo}>
+                  {r.designatedTo}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
       </Grid>
-      <InProgressTable headCells={headCells} rows={rows} />
+      <InProgressTable
+        headCells={headCells}
+        rows={rows.filter(
+          (procedure) => procedure.designatedTo === selectedPerson
+        )}
+      />
     </Box>
   );
 };

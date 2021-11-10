@@ -38,7 +38,7 @@ const HistoricalPage = () => {
     createdAt: new Date(),
   });
 
-  const { isLoading: isLoadingProcedures, refetch } = useQuery(
+  const { isFetching: isLoadingProcedures, refetch } = useQuery(
     "getListOfHistoricalProcedures",
     getListOfHistoricalProcedures,
     {
@@ -47,10 +47,11 @@ const HistoricalPage = () => {
         setRows(tableRows);
         setRowTotal(tableRows.length);
       },
+      refetchIntervalInBackground: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   );
-
-  if (isLoadingProcedures) return <Loader />;
 
   const handleExpanded = () => {
     setExpanded(!expanded);
@@ -79,7 +80,6 @@ const HistoricalPage = () => {
       });
     }
     setRows(newRows);
-    console.log(newRows);
   };
 
   console.log(rows);
@@ -251,17 +251,20 @@ const HistoricalPage = () => {
         </AccordionDetails>
       </Accordion>
       <Box mt={3}>
-        <HistoricalTable
-          headCells={headCells}
-          rows={rows.filter(
-            (procedure) =>
-              procedure.code.toLowerCase().includes(searchQuery) ||
-              procedure.userName.toLowerCase().includes(searchQuery) ||
-              procedure.evaluator.toLowerCase().includes(searchQuery) ||
-              procedure.dni.toLowerCase().includes(searchQuery)
-          )}
-        />
-        ;
+        {isLoadingProcedures ? (
+          <Loader />
+        ) : (
+          <HistoricalTable
+            headCells={headCells}
+            rows={rows.filter(
+              (procedure) =>
+                procedure.code.toLowerCase().includes(searchQuery) ||
+                procedure.userName.toLowerCase().includes(searchQuery) ||
+                procedure.evaluator.toLowerCase().includes(searchQuery) ||
+                procedure.dni.toLowerCase().includes(searchQuery)
+            )}
+          />
+        )}
       </Box>
     </Box>
   );

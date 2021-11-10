@@ -39,9 +39,10 @@ export function putUserAnalyst(idProcedure, idUserAnalyst) {
     });
 }
 
-export function getProceduresInProgress(idUserMunicipal) {
+export function getProceduresInProgress(userRole) {
+  const role = userRole === "analista" ? "analyst" : "responsable";
   return axios
-    .get(`${baseUrl}/api/procedures/inProgress?idUser=${idUserMunicipal}`)
+    .get(`${baseUrl}/api/procedures/inProgress/${role}`)
     .then((res) => {
       return res.data;
     });
@@ -89,21 +90,6 @@ export function getProcedureObservations(idProcedure) {
     });
 }
 
-export function getProcedureInProgressForResponsable() {
-  return axios
-    .get(`${baseUrl}/api/procedures/inProgress/Responsable`)
-    .then((res) => {
-      return res.data;
-    });
-}
-
-export function getProcedureInProgressForAnalyst() {
-  return axios
-    .get(`${baseUrl}/api/procedures/inProgress/Analyst`)
-    .then((res) => {
-      return res.data;
-    });
-}
 export function getListOfHistoricalProcedures() {
   return axios.get(`${baseUrl}/api/procedures/historical`).then((res) => {
     return res.data;

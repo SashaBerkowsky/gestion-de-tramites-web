@@ -51,7 +51,9 @@ const PendingPage = () => {
       label: "Fecha de inicio",
     },
   ];
-  const rows = getTableRowsForPending(pendingProcedures);
+  const rows = pendingProcedures
+    ? getTableRowsForPending(pendingProcedures)
+    : [];
   return (
     <Box>
       <Box mb={3}>
