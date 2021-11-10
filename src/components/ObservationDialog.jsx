@@ -1,5 +1,3 @@
-import * as React from "react";
-import moment from "moment";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -58,7 +56,7 @@ export default function AlertDialog({ isopen, closeDialog }) {
 						<ul>
 							{observations.map((obs, i) => (
 								<li style={{ marginBottom: 30 }} key={i}>
-									{moment(obs.eventDate).format("DD/MM/yyyy")}
+									{obs.eventDate}
 									{" - " + obs.observation}
 								</li>
 							))}
