@@ -10,16 +10,23 @@ import { useQuery } from "react-query";
 import { getProcedureObservations } from "../api/procedures";
 import { useParams } from "react-router-dom";
 import Loader from "./Loader";
+import ErrorAlert from "./ErrorAlert";
 
 export default function AlertDialog({ isopen, closeDialog }) {
 	const { idProcedure } = useParams();
 
-	const { isLoading, data: observations } = useQuery(
-		["getProcedureObservations"],
-		() => getProcedureObservations(idProcedure)
+	const {
+		isLoading,
+		data: observations,
+		isError,
+		error,
+	} = useQuery(["getProcedureObservations"], () =>
+		getProcedureObservations(idProcedure)
 	);
 
 	if (isLoading) return <Loader />;
+
+	if (isError) return <ErrorAlert message={error.message} />;
 
 	return (
 		<div>

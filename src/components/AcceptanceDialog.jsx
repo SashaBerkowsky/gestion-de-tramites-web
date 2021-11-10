@@ -8,14 +8,16 @@ import Dialog from "@mui/material/Dialog";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import Snackbar from "@mui/material/Snackbar";
 import Select from "@mui/material/Select";
 import Loader from "../components/Loader";
+import ErrorAlert from "../components/ErrorAlert";
 import { getUsersResponsible } from "../api/user";
 import { putUserResponsible } from "../api/procedures";
 import { useQuery, useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 
-function AcceptanceDialog({ onClose, selectedValue, open, idProcedure }) {
+function AcceptanceDialog({ onClose, open, idProcedure }) {
 	const [selectedPerson, setSelectedPerson] = useState("");
 	let history = useHistory();
 
@@ -23,28 +25,38 @@ function AcceptanceDialog({ onClose, selectedValue, open, idProcedure }) {
 		setSelectedPerson(event.target.value);
 	};
 
-	const handleClose = () => {
-		onClose(selectedValue);
+	const handleClose = (isSuccess) => {
+		onClose(isSuccess);
 	};
 
-	const { isLoading, data: usersResponsible } = useQuery(
-		["getUsersResponsible"],
-		() => getUsersResponsible()
-	);
+	const {
+		isLoading,
+		data: usersResponsible,
+		isError,
+		error,
+	} = useQuery(["getUsersResponsible"], () => getUsersResponsible());
 
-	const putUserMutation = useMutation(
+	const {
+		mutateAsync: putUserMutation,
+		isLoading: isMutationLoading,
+		isError: isErrorInMutation,
+	} = useMutation(
 		(mutationData) => {
 			putUserResponsible(mutationData.idProcedure, mutationData.selectedPerson);
 		},
 		{
-			onSuccess: () => {
-				history.push(`/pending`);
-				alert("Responsable asignado correctamente!");
+			onError: () => {
+				alert("error");
 			},
 		}
 	);
 
-	if (isLoading) return <Loader />;
+	if (isLoading || isMutationLoading) return <Loader />;
+
+	if (isError) return <ErrorAlert message={error.message} />;
+
+	if (isErrorInMutation)
+		return <ErrorAlert message='Error al asignar usuario responsable' />;
 
 	return (
 		<Dialog onClose={handleClose} open={open}>
@@ -77,13 +89,14 @@ function AcceptanceDialog({ onClose, selectedValue, open, idProcedure }) {
 					Cancelar
 				</Button>
 				<Button
-					onClick={() => {
-						putUserMutation.mutate({ idProcedure, selectedPerson });
+					onClick={async () => {
+						await putUserMutation({ idProcedure, selectedPerson });
+						handleClose(true, "El usuario responsable fue asignado con exito!");
 					}}
 					autoFocus
 					color='secondary'
 					variant='contained'
-					disabled={!selectedPerson || putUserMutation.isLoading}
+					disabled={!selectedPerson || isMutationLoading}
 				>
 					Aprobar
 				</Button>
