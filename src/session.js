@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
         userRole: rawUser.municipalRoleCode.toLowerCase(),
         name: rawUser.name,
         surname: rawUser.surname,
+        completeName: `${rawUser.name} ${rawUser.surname}`,
         idMunicipalRole: rawUser.idMunicipalRole,
       };
     } catch (err) {
