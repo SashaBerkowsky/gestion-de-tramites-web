@@ -9,29 +9,24 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Loader from "../components/Loader";
 import ErrorAlert from "../components/ErrorAlert";
-import { getUsersResponsible } from "../api/user";
 import { putUserResponsible } from "../api/procedures";
-import { useQuery, useMutation } from "react-query";
+import { useMutation } from "react-query";
 
-function AcceptanceDialog({ onClose, open, idProcedure }) {
+function AcceptanceDialog({ onClose, open, idProcedure, usersResponsible }) {
 	const [selectedPerson, setSelectedPerson] = useState("");
 
 	const handleChange = (event) => {
 		setSelectedPerson(event.target.value);
 	};
 
-	const handleClose = (isSuccess) => {
-		onClose(isSuccess, "Usuario responsable asignado con exito!");
+	const handleClose = () => {
+		onClose();
 	};
 
-	const {
-		isLoading,
-		data: usersResponsible,
-		isError,
-		error,
-	} = useQuery(["getUsersResponsible"], () => getUsersResponsible());
+	const handleSuccess = (isSuccess, msgSuccess) => {
+		onClose(isSuccess, msgSuccess);
+	};
 
 	const {
 		mutateAsync: putUserMutation,
@@ -47,10 +42,6 @@ function AcceptanceDialog({ onClose, open, idProcedure }) {
 			},
 		}
 	);
-
-	if (isLoading || isMutationLoading) return <Loader />;
-
-	if (isError) return <ErrorAlert message={error.message} />;
 
 	if (isErrorInMutation)
 		return <ErrorAlert message='Error al asignar usuario responsable' />;
@@ -88,7 +79,10 @@ function AcceptanceDialog({ onClose, open, idProcedure }) {
 				<Button
 					onClick={async () => {
 						await putUserMutation({ idProcedure, selectedPerson });
-						handleClose(true, "El usuario responsable fue asignado con exito!");
+						handleSuccess(
+							true,
+							"El usuario responsable fue asignado con exito!"
+						);
 					}}
 					autoFocus
 					color='secondary'
