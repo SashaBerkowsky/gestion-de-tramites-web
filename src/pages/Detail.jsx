@@ -12,6 +12,7 @@ import { getProcedureDetail } from "../api/procedures";
 import Loader from "../components/Loader";
 import ErrorAlert from "../components/ErrorAlert";
 import PopUpMsg from "../components/PopUpMsg";
+import moment from "moment";
 
 const DetailPage = () => {
 	let location = useLocation();
@@ -138,7 +139,7 @@ const DetailPage = () => {
 					<Box as='span' sx={{ fontWeight: "bold" }}>
 						Fecha inicio:
 					</Box>
-					01/01/2021
+					{" " + moment(procedureDetail.creationDate).format("DD/MM/YYYY")}
 				</Box>
 			</Box>
 			<Box

@@ -248,8 +248,7 @@ const DetailData = () => {
 						variant='contained'
 						color='info'
 						size='small'
-						href={selectedImg.src}
-						download
+						onClick={() => window.open(selectedImg.src, "_blank")}
 					>
 						Ver en tamaño completo
 					</Button>

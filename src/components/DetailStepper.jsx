@@ -97,14 +97,18 @@ const DetailStepper = ({ currentStep }) => {
 		const selectedDay = selectedDate.getDay();
 		const selectedHour = selectedDate.getHours();
 		const selectedDateNumber = selectedDate.getDate();
+		const selectedMonth = selectedDate.getMonth();
 
 		const initDateNumber = initDate.getDate();
 		const initHour = initDate.getHours();
+		const initMonth = initDate.getMonth();
 
 		const isWeekDay = selectedDay !== 0 && selectedDay !== 6;
 		const isHourValid = selectedHour >= 8 && selectedHour < 20;
 		const isDateOld =
-			selectedDateNumber <= initDateNumber && selectedHour <= initHour;
+			selectedDateNumber <= initDateNumber &&
+			selectedHour <= initHour &&
+			selectedMonth <= initMonth;
 
 		setIsDateValid(isWeekDay && isHourValid && !isDateOld);
 		if (!isDateValid) {
@@ -146,7 +150,7 @@ const DetailStepper = ({ currentStep }) => {
 	};
 
 	const handleAppointmentCreation = () => {
-		const selectedDate = appointmentDate.format("yyyy-MM-DD");
+		const selectedDate = appointmentDate.format("yyyy-MM-DD HH:mm:ss");
 		putUserMutation.mutate({ idProcedure, date: selectedDate });
 	};
 
@@ -219,7 +223,7 @@ const DetailStepper = ({ currentStep }) => {
 							<LocalizationProvider dateAdapter={DateAdapter}>
 								<MobileDateTimePicker
 									label='Fecha de trámite'
-									inputFormat='DD/MM/YYYY hh:mm'
+									inputFormat='DD/MM/YYYY HH:mm'
 									renderInput={(params) => (
 										<TextField {...params} helperText={dateErrorMsg} />
 									)}
